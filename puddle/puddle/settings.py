@@ -27,7 +27,8 @@ from django.conf.global_settings import (
     EMAIL_BACKEND,
 )
 
-from decouple import config  # Импорт для .env
+from decouple import config 
+ # Импорт для .env
 
 # Email настройки для Gmail SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Default SMTP backend
@@ -52,62 +53,100 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Europe/Moscow"
 
+CELERY_TEST_SCHEDULE = True
+
 CELERY_BEAT_SCHEDULE = {
-    # 'send-daily-notifications': {
-    #     'task': 'notifications.tasks.send_daily_notifications',
-    #     'schedule': crontab(hour=12, minute=0),
-    # },
-    # 'generate-daily-report': {
-    #     'task': 'reports.tasks.generate_daily_report',
-    #     'schedule': crontab(hour=20, minute=22),
-    # },
-    # 'cleanup-abandoned-carts': {
-    #     'task': 'reports.tasks.cleanup_abandoned_carts',
-    #     'schedule': crontab(hour=1, minute=0),
-    # },
-    'send-daily-discounts': {
-        'task': 'notifications.tasks.send_daily_discounts',
-        # 'schedule': crontab(hour=9, minute=0),  # Reverted to 9:00 for production
-        'schedule': crontab(minute='*/1'),  # Uncomment for testing
+    # Отправка ежедневных уведомлений
+    "send-daily-notifications": {
+        "task": "notifications.tasks.send_daily_notifications",
+        "schedule": crontab(minute="*/1") if CELERY_TEST_SCHEDULE else crontab(hour=12, minute=0),
     },
-    # 'send-abandoned-cart-reminder': {
-    #     'task': 'notifications.tasks.send_abandoned_cart_reminder',
-    #     # 'schedule': crontab(hour=13, minute=5),
-    #     'schedule': crontab(minute='*/1'),  # Uncomment for testing
-    # },
+
+    # Сбор/генерация ежедневного отчёта
+    "generate-daily-report": {
+        "task": "notifications.tasks.generate_daily_report",
+        # В тесте — каждую минуту, в проде — в 20:22
+        "schedule": crontab(minute="*/1") if CELERY_TEST_SCHEDULE else crontab(hour=20, minute=22),
+    },
+
+    # Очистка заброшенных корзин
+    "cleanup-abandoned-carts": {
+        "task": "notifications.tasks.cleanup_abandoned_carts",
+        # В тесте — каждую минуту, в проде — в 01:00
+        "schedule": crontab(minute="*/1") if CELERY_TEST_SCHEDULE else crontab(hour=1, minute=0),
+    },
+
+    # Ежедневные скидки
+    "send-daily-discounts": {
+        "task": "notifications.tasks.send_daily_discounts",
+        # В тесте — каждую минуту, в проде — в 09:00
+        "schedule": crontab(minute="*/1") if CELERY_TEST_SCHEDULE else crontab(hour=9, minute=0),
+    },
+
+    # Напоминание о заброшенной корзине
+    "send-abandoned-cart-reminder": {
+        "task": "notifications.tasks.send_abandoned_cart_reminder",
+        # В тесте — каждую минуту, в проде — в 13:05
+        "schedule": crontab(minute="*/1") if CELERY_TEST_SCHEDULE else crontab(hour=13, minute=5),
+    },
 }
 
 # CELERY_BEAT_SCHEDULE = {
-#     "send-daily-notifications": {  # Твоя предыдущая задача
-#         "task": "notifications.tasks.send_daily_notifications",
-#         "schedule": {"type": "crontab", "hour": 12, "minute": 0},
+#     # 'send-daily-notifications': {
+#     #     'task': 'notifications.tasks.send_daily_notifications',
+#     #     'schedule': crontab(hour=12, minute=0),
+#     # },
+#     # 'generate-daily-report': {
+#     #     'task': 'reports.tasks.generate_daily_report',
+#     #     'schedule': crontab(hour=20, minute=22),
+#     # },
+#     # 'cleanup-abandoned-carts': {
+#     #     'task': 'reports.tasks.cleanup_abandoned_carts',
+#     #     'schedule': crontab(hour=1, minute=0),
+#     # },
+#     'send-daily-discounts': {
+#         'task': 'notifications.tasks.send_daily_discounts',
+#         # 'schedule': crontab(hour=9, minute=0),  # Reverted to 9:00 for production
+#         'schedule': crontab(minute='*/1'),  # Uncomment for testing
 #     },
-#     "generate-daily-report": {
-#         "task": "reports.tasks.generate_daily_report",
-#         # "schedule": {"type": "crontab", "hour": 20, "minute": 22},  # Полночь
-#         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
-#     },
-#     "cleanup-abandoned-carts": {
-#         "task": "reports.tasks.cleanup_abandoned_carts",
-#         "schedule": {
-#             "type": "crontab",
-#             "hour": 1,
-#             "minute": 0,
-#         },  # 01:00, чтобы не конфликтовать
-#     },
-#     "send-daily-discounts": {
-#         "task": "notifications.tasks.send_daily_discounts",
-#         # "schedule": {"type": "crontab", "hour": 9, "minute": 0},  # Каждый день в 9:00
-#         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
-
-#     },
-#         'send-abandoned-cart-reminder': {
-#         'task': 'notifications.tasks.send_abandoned_cart_reminder',
-#         # 'schedule': {"type": "crontab", "hour": 13, "minute": 5},
-#         'schedule': crontab(minute='*/1'),  # Полночь
-
-#     },
+#     # 'send-abandoned-cart-reminder': {
+#     #     'task': 'notifications.tasks.send_abandoned_cart_reminder',
+#     #     # 'schedule': crontab(hour=13, minute=5),
+#     #     'schedule': crontab(minute='*/1'),  # Uncomment for testing
+#     # },
 # }
+
+# # CELERY_BEAT_SCHEDULE = {
+# #     "send-daily-notifications": {  # Твоя предыдущая задача
+# #         "task": "notifications.tasks.send_daily_notifications",
+# #         "schedule": {"type": "crontab", "hour": 12, "minute": 0},
+# #     },
+# #     "generate-daily-report": {
+# #         "task": "reports.tasks.generate_daily_report",
+# #         # "schedule": {"type": "crontab", "hour": 20, "minute": 22},  # Полночь
+# #         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
+# #     },
+# #     "cleanup-abandoned-carts": {
+# #         "task": "reports.tasks.cleanup_abandoned_carts",
+# #         "schedule": {
+# #             "type": "crontab",
+# #             "hour": 1,
+# #             "minute": 0,
+# #         },  # 01:00, чтобы не конфликтовать
+# #     },
+# #     "send-daily-discounts": {
+# #         "task": "notifications.tasks.send_daily_discounts",
+# #         # "schedule": {"type": "crontab", "hour": 9, "minute": 0},  # Каждый день в 9:00
+# #         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
+
+# #     },
+# #         'send-abandoned-cart-reminder': {
+# #         'task': 'notifications.tasks.send_abandoned_cart_reminder',
+# #         # 'schedule': {"type": "crontab", "hour": 13, "minute": 5},
+# #         'schedule': crontab(minute='*/1'),  # Полночь
+
+# #     },
+# # }
 # {'type': 'crontab', 'minute': '*/5'}
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -217,15 +256,15 @@ WSGI_APPLICATION = "puddle.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "home",
-        "USER": "home",
-        "PASSWORD": "root",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("SQL_DATABASE", "home"),
+        "USER": os.environ.get("SQL_USER", "home"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "root"),
+        "HOST": os.environ.get("SQL_HOST", "127.0.0.1"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
