@@ -8618,3 +8618,336 @@ INFO 2025-10-26 12:14:06,607 tasks DEBUG=True: Симуляция отправк
 INFO 2025-10-26 12:14:06,620 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
 INFO 2025-10-26 12:14:06,645 tasks Нет заброшенных корзин для удаления
 INFO 2025-10-26 12:14:06,668 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 12:15:00,014 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:15:00,117 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:15:00,117 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:15:00,143 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:15:00,155 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:15:00,231 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:16:00,012 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:16:00,040 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:16:00,065 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:16:00,078 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:16:00,164 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:16:00,164 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:17:00,006 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:17:00,029 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:17:00,046 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:17:00,055 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:17:00,112 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:17:00,113 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:18:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:18:00,025 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:18:00,041 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:18:00,051 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:18:00,111 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:18:00,111 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:19:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:19:00,024 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:19:00,040 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:19:00,050 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:19:00,114 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:19:00,115 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:20:00,021 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:20:00,022 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:20:00,039 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:20:00,048 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:20:00,066 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:20:00,108 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:21:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:21:00,022 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 12:21:00,040 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:21:00,049 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:21:00,110 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 12:21:00,110 tasks   - Ежедневные скидки на мебель to iosk00mihail@gmail.com
+INFO 2025-10-26 12:58:00,011 tasks Нет товаров со скидками для рассылки
+INFO 2025-10-26 12:58:00,119 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:58:00,144 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:58:00,155 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 12:58:00,176 tasks Нет пользователей с email
+INFO 2025-10-26 12:59:00,010 tasks Нет пользователей с email
+INFO 2025-10-26 12:59:00,028 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 12:59:00,047 tasks Нет товаров со скидками для рассылки
+INFO 2025-10-26 12:59:00,067 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 12:59:00,076 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 13:00:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 13:00:00,028 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 13:00:00,051 tasks Нет товаров со скидками для рассылки
+INFO 2025-10-26 13:00:00,073 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 13:00:00,082 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 13:01:00,007 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 13:01:00,024 tasks Нет товаров со скидками для рассылки
+INFO 2025-10-26 13:01:00,044 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 13:01:00,062 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 13:01:00,073 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 13:02:00,005 tasks Нет товаров со скидками для рассылки
+INFO 2025-10-26 13:02:00,028 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 13:02:00,047 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 13:02:00,068 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 13:02:00,078 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:47:00,012 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 18:47:00,090 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:47:00,108 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 18:47:00,118 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:47:00,135 tasks Нет пользователей с email
+INFO 2025-10-26 18:48:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:48:00,025 tasks Нет пользователей с email
+INFO 2025-10-26 18:48:00,047 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 18:48:00,057 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:48:00,080 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 18:49:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:49:00,028 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:49:00,112 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:49:00,112 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:49:00,130 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 18:49:00,140 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:50:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:50:00,025 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:50:00,047 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:50:00,057 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:50:00,123 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:50:00,124 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:51:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:51:00,027 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:51:00,084 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:51:00,092 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:51:00,128 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:51:00,128 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:52:00,008 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:52:00,017 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:52:00,057 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:52:00,058 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:52:00,114 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:52:00,131 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:53:00,006 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:53:00,033 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:53:00,058 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:53:00,067 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:53:00,165 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:53:00,167 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:54:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:54:00,026 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:54:00,046 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:54:00,057 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:54:00,120 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:54:00,120 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:55:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:55:00,025 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:55:00,073 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:55:00,079 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:55:00,109 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:55:00,110 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:56:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 18:56:00,029 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:56:00,049 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:56:00,059 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:56:00,117 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:56:00,118 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:57:00,013 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 2
+- Amount of orders: 0
+INFO 2025-10-26 18:57:00,022 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 18:57:00,055 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 18:57:00,055 tasks   - Ежедневные скидки на мебель to ioskomihailaa@gmail.com
+INFO 2025-10-26 18:57:00,110 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 18:57:00,127 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:02:00,085 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:02:00,116 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:02:00,126 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:02:00,146 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:02:00,163 tasks Нет пользователей с email
+INFO 2025-10-26 19:03:00,004 tasks Нет пользователей с email
+INFO 2025-10-26 19:03:00,024 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:03:00,042 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:03:00,062 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:03:00,071 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:04:00,004 tasks Нет пользователей с email
+INFO 2025-10-26 19:04:00,022 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:04:00,041 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:04:00,061 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:04:00,070 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:05:00,006 tasks DEBUG=True: Симуляция отправки 2 уведомлений
+INFO 2025-10-26 19:05:00,024 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:05:00,095 tasks DEBUG=True: Симуляция отправки 2 писем
+INFO 2025-10-26 19:05:00,096 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:05:00,096 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:05:00,115 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 1
+- Amount of orders: 0
+INFO 2025-10-26 19:05:00,125 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:06:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:06:00,027 tasks DEBUG=True: Симуляция отправки 2 уведомлений
+INFO 2025-10-26 19:06:00,049 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 1
+- Amount of orders: 0
+INFO 2025-10-26 19:06:00,058 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:06:00,147 tasks DEBUG=True: Симуляция отправки 2 писем
+INFO 2025-10-26 19:06:00,148 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:06:00,148 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:07:00,045 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:07:00,068 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 1
+- Amount of orders: 0
+INFO 2025-10-26 19:07:00,076 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:07:00,095 tasks DEBUG=True: Симуляция отправки 2 уведомлений
+INFO 2025-10-26 19:07:00,133 tasks DEBUG=True: Симуляция отправки 2 писем
+INFO 2025-10-26 19:07:00,134 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:07:00,134 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:08:00,084 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:08:00,109 tasks DEBUG=True: Симуляция отправки 2 уведомлений
+INFO 2025-10-26 19:08:00,136 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 1
+- Amount of orders: 0
+INFO 2025-10-26 19:08:00,147 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:08:00,246 tasks DEBUG=True: Симуляция отправки 2 писем
+INFO 2025-10-26 19:08:00,247 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:08:00,247 tasks   - Ежедневные скидки на мебель to asdfasfd@gmail.com
+INFO 2025-10-26 19:11:00,018 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:11:00,110 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:11:00,137 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 7
+- Amount of orders: 0
+INFO 2025-10-26 19:11:00,151 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:11:00,174 tasks Нет пользователей с email
+INFO 2025-10-26 19:12:00,011 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:12:00,038 tasks DEBUG=True: Симуляция отправки 1 уведомлений
+INFO 2025-10-26 19:12:00,069 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 7
+- Amount of orders: 0
+INFO 2025-10-26 19:12:00,081 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:12:00,199 tasks DEBUG=True: Симуляция отправки 1 писем
+INFO 2025-10-26 19:12:00,200 tasks   - Ежедневные скидки на мебель to wert@gmail.com
+INFO 2025-10-26 19:15:00,103 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:15:00,272 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:15:00,362 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:15:00,412 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:15:00,739 tasks Нет пользователей с email
+INFO 2025-10-26 19:16:00,063 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:16:00,198 tasks Нет пользователей с email
+INFO 2025-10-26 19:16:00,314 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:16:00,353 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:16:00,669 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:17:00,077 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:17:00,159 tasks Нет пользователей с email
+INFO 2025-10-26 19:17:00,264 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:17:00,373 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:17:00,417 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:18:00,074 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:18:00,167 tasks Нет пользователей с email
+INFO 2025-10-26 19:18:00,255 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:18:00,352 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:18:00,385 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:19:00,014 tasks Нет пользователей с email
+INFO 2025-10-26 19:19:00,040 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:19:00,063 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:19:00,092 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:19:00,104 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:20:00,015 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:20:00,053 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:20:00,083 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:20:00,096 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:20:00,121 tasks Нет пользователей с email
+INFO 2025-10-26 19:21:00,013 tasks Нет пользователей с email
+INFO 2025-10-26 19:21:00,036 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:21:00,061 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:21:00,088 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:21:00,101 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:22:00,011 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:22:00,044 tasks Нет пользователей с email
+INFO 2025-10-26 19:22:00,078 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:22:00,107 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:22:00,118 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:23:00,004 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:23:00,023 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:23:00,040 tasks Нет пользователей с email
+INFO 2025-10-26 19:23:00,060 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:23:00,071 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:24:00,007 tasks Нет пользователей с email
+INFO 2025-10-26 19:24:00,025 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:24:00,045 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:24:00,066 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:24:00,075 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:25:00,005 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:25:00,030 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:25:00,052 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:25:00,061 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf
+INFO 2025-10-26 19:25:00,080 tasks Нет пользователей с email
+INFO 2025-10-26 19:27:00,087 tasks Нет активных подписанных пользователей для рассылки скидок
+INFO 2025-10-26 19:27:00,130 tasks Нет пользователей с email
+INFO 2025-10-26 19:27:00,163 tasks Нет заброшенных корзин для удаления
+INFO 2025-10-26 19:27:00,195 tasks DEBUG=True: Симуляция отправки отчёта: Daily report for 2025-10-26:
+- Things in carts: 0
+- Amount of orders: 0
+INFO 2025-10-26 19:27:00,208 tasks Отчёт сгенерирован: /app/media/reports/daily_report_2025-10-26.pdf

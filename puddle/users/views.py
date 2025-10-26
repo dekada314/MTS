@@ -11,7 +11,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 from carts.models import Cart
 from common.mixins import CacheMixin
 from orders.models import Order, OrderItem
-
+import os
 from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 import secrets
 from django.contrib.auth import get_user_model
@@ -114,7 +114,7 @@ class UserRegistrationView(CreateView):
         if session_key:
             Cart.objects.filter(session_key=session_key).update(user=user)
 
-        if getattr(settings, 'EMAIL_VERIFICATION_REQUIRED', True):
+        if os.environ.get("EMAIL_VERIFICATION_REQUIRED", False):
             messages.success(
                 self.request, 
                 f"{user.username}, Вы успешно зарегистрированы! Проверьте email для подтверждения."
