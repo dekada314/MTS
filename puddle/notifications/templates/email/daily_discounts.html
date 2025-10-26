@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ежедневные Скидки</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .product {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            gap: 15px;
+            transition: transform 0.2s;
+        }
+        .product:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .product-info {
+            flex: 1;
+        }
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .price {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .discount-badge {
+            background: #ff4757;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 Ежедневные Скидки!</h1>
+            <p style="margin: 10px 0 0;">{{ discount_count }} товаров со скидкой сегодня</p>
+        </div>
+        <div class="content">
+            <h2>Привет, {{ user.first_name|default:user.username }}!</h2>
+            <p>Специально для вас мы подобрали лучшие предложения дня. Не упустите возможность сэкономить!</p>
+            
+            {% for product in products %}
+            <div class="product">
+                {% if product.image %}
+                <img src="{{ base_url }}{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <div class="product-image" style="background: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #6c757d;">📦</span>
+                </div>
+                {% endif %}
+                <div class="product-info">
+                    <div class="product-name">{{ product.name }}</div>
+                    <div>
+                        <span class="discount-badge">-{{ product.discount }}%</span>
+                    </div>
+                    <div style="margin-top: 8px;">
+                        <span class="old-price">{{ product.price }} ₽</span>
+                        <span class="price">{{ product.sell_price }} ₽</span>
+                    </div>
+                    <a href="{{ base_url }}{% url 'catalog:product' product.slug %}" style="color: #667eea; text-decoration: none; font-size: 14px;">Подробнее →</a>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div style="text-align: center;">
+                <a href="{{ base_url }}{% url 'catalog:index' 'all' %}" class="button">Посмотреть все скидки</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ year }} Puddle Furniture Store. Все права защищены.</p>
+            <p><a href="{{ base_url }}" style="color: #667eea;">Отписаться от рассылки</a></p>
+        </div>
+    </div>
+</body>
+</html>

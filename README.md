@@ -1,187 +1,379 @@
-# Puddle — интернет-магазин мебели на Django
+# 🪑 Puddle - Furniture E-Commerce Platform
 
-Проект интернет-магазина с каталогом товаров, корзиной, оформлением заказов, аутентификацией пользователей и системой email-уведомлений/рассылок на Celery. Поддерживается локальный запуск и Docker-окружение (PostgreSQL + Redis + Gunicorn + Celery worker/beat).
+> Современная платформа электронной коммерции для мебельного магазина с полнофункциональным REST API
 
-## Содержание
-- [Возможности](#возможности)
-- [Технологии](#технологии)
-- [Архитектура](#архитектура)
-- [Структура репозитория](#структура-репозитория)
-- [Подготовка окружения](#подготовка-окружения)
-- [Запуск локально](#запуск-локально)
-- [Запуск в Docker](#запуск-в-docker)
-- [Переменные окружения](#переменные-окружения)
-- [Статика и медиа](#статика-и-медиа)
-- [Фоновые задачи](#фоновые-задачи)
-- [Тестирование](#тестирование)
-- [Полезные команды](#полезные-команды)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+[![Django](https://img.shields.io/badge/Django-5.2-green.svg)](https://djangoproject.com)
+[![DRF](https://img.shields.io/badge/DRF-3.15-red.svg)](https://django-rest-framework.org)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Возможности
-- Каталог товаров с категориями, карточкой товара и скидками.
-- Корзина для авторизованных и анонимных пользователей.
-- Оформление заказов с адресом, доставкой и статусами.
-- Аутентификация, профиль пользователя, аватар.
-- Email-уведомления и рассылки, планируемые задачи (Celery Beat).
-- Генерация PDF-отчетов о состоянии магазина (ReportLab).
+## 📋 Содержание
 
-## Технологии
-- Backend: Django 5.2.x (admin, auth, sessions, messages, staticfiles, contrib.postgres)
-- БД: PostgreSQL 16
-- Очереди/планировщик: Celery 5.5 + Redis 7, django-celery-beat
-- Сервер: Gunicorn
-- Контейнеризация: Docker, docker-compose
-- Email: Gmail SMTP
-- Тестирование: pytest, pytest-django, pytest-cov
-- Прочее: python-decouple/os.environ, reportlab, dj-database-url (в требованиях)
+- [Возможности](#-возможности)
+- [Технологический стек](#-технологический-стек)
+- [Быстрый старт](#-быстрый-старт)
+- [Установка](#-установка)
+- [Конфигурация](#-конфигурация)
+- [API Документация](#-api-документация)
+- [Структура проекта](#-структура-проекта)
+- [Развёртывание](#-развёртывание)
+- [Тестирование](#-тестирование)
 
-## Архитектура
-- Проект: `puddle`
-- Приложения:
-  - `main` — главные страницы
-  - `goods` — каталог, категории, товары
-  - `carts` — корзина и операции с ней
-  - `orders` — оформление заказов
-  - `users` — аутентификация и профиль
-  - `notifications` — фоновые задачи, рассылки, отчеты
-- Инфраструктура:
-  - Dockerfile, docker-compose.yml (web, db, redis, celery worker, celery beat)
-  - Логи Celery: `puddle/logs/celery.log`
+## ✨ Возможности
 
-## Структура репозитория
-```
-Django/
-└─ puddle/
-   ├─ manage.py
-   ├─ requirements.txt
-   ├─ docker-compose.yml
-   ├─ Dockerfile
-   ├─ .env (локальные переменные окружения)
-   ├─ templates/
-   ├─ static/    # исходники статики
-   ├─ staticfiles/ # collectstatic output
-   ├─ media/
-   ├─ logs/
-   ├─ puddle/    # ядро проекта
-   │  ├─ settings.py
-   │  ├─ urls.py
-   │  ├─ wsgi.py
-   │  ├─ asgi.py
-   │  └─ celery_app.py
-   ├─ main/
-   ├─ goods/
-   ├─ carts/
-   ├─ orders/
-   ├─ users/
-   └─ notifications/
-```
+### Веб-приложение
+- 🛍️ **Каталог товаров** с категориями и фильтрацией
+- 🛒 **Корзина покупок** с динамическим обновлением
+- 📦 **Система заказов** с отслеживанием статуса
+- 👤 **Профили пользователей** с историей заказов
+- ✉️ **Email верификация** для безопасности
+- 🎯 **Система скидок** с автоматическими акциями
+- 📧 **Email рассылки** о новых скидках
 
-## Подготовка окружения
-Требования:
+### REST API
+- 🔐 **Аутентификация** (Session/Token)
+- 📱 **RESTful endpoints** для всех операций
+- 📊 **Swagger UI** для интерактивной документации
+- 🔍 **Поиск и фильтрация** товаров
+- 📈 **Статистика заказов** для администраторов
+- 🚀 **Оптимизация запросов** с select_related/prefetch_related
+
+### Фоновые задачи
+- ⚡ **Celery** для асинхронных операций
+- 📧 **Автоматические email уведомления**
+- 📊 **Ежедневная рассылка скидок**
+- 🔄 **Периодические задачи** с Celery Beat
+
+## 🛠 Технологический стек
+
+### Backend
+- **Django 5.2** - Web framework
+- **Django REST Framework 3.15** - API framework
+- **PostgreSQL** - Production database
+- **Redis** - Caching & message broker
+- **Celery** - Асинхронные задачи
+- **Pillow** - Обработка изображений
+
+### API & Documentation
+- **drf-spectacular** - OpenAPI 3.0 schema
+- **django-cors-headers** - CORS support
+- **django-filter** - Advanced filtering
+
+### Development
+- **Docker & Docker Compose** - Containerization
+- **Gunicorn** - WSGI server
+- **python-decouple** - Environment management
+
+## 🚀 Быстрый старт
+
+### Предварительные требования
+
 - Python 3.11+
-- PostgreSQL 16
-- Redis 7
+- PostgreSQL 14+
+- Redis 7+
+- Docker (опционально)
 
-Установка зависимостей:
-```bash
-pip install -r puddle/requirements.txt
-```
+### С Docker (рекомендуется)
 
-## Запуск локально
-1) Настройте переменные окружения (см. раздел ниже). Можно использовать `puddle/.env` или экспортировать в OS.
-2) Примените миграции:
 ```bash
-python puddle/manage.py migrate
-```
-3) Создайте суперпользователя:
-```bash
-python puddle/manage.py createsuperuser
-```
-4) Запустите сервер разработки:
-```bash
-python puddle/manage.py runserver
-```
-5) Запустите Celery worker и beat в отдельных терминалах:
-```bash
-celery -A puddle.puddle.celery_app:app worker -l info
-celery -A puddle.puddle.celery_app:app beat -l info \
-  --scheduler django_celery_beat.schedulers:DatabaseScheduler
-```
+# Клонировать репозиторий
+git clone <repository-url>
+cd Django
 
-## Запуск в Docker
-1) Перейдите в директорию `puddle` и создайте `.env` с переменными (см. список ниже).
-2) Поднимите сервисы:
-```bash
+# Создать .env файл
+cp .env.example .env
+# Отредактируйте .env с вашими настройками
+
+# Запустить контейнеры
+docker-compose up -d
+
+# Выполнить миграции
+docker-compose exec web python manage.py migrate
+
+# Создать суперпользователя
+docker-compose exec web python manage.py createsuperuser
+
+# Собрать статику
+docker-compose exec web python manage.py collectstatic --noinput
+Приложение доступно по адресу: http://localhost:8000
+
+Без Docker
+bash
+# Создать виртуальное окружение
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Установить зависимости
+pip install -r requirements.txt
+
+# Настроить базу данных PostgreSQL
+createdb puddle_db
+
+# Создать .env файл
+cp .env.example .env
+# Настроить DATABASE_URL и другие переменные
+
+# Выполнить миграции
 cd puddle
-docker-compose up --build
-```
-Сервисы:
-- `web` — Django + Gunicorn (порт 8000)
-- `db` — Postgres 16
-- `redis` — Redis 7 (порт 6379)
-- `celery_worker` — воркер задач
-- `celery_beat` — планировщик (DatabaseScheduler)
+python manage.py migrate
 
-## Переменные окружения
-Обязательные:
-- `SECRET_KEY`
-- `DEBUG` (0/1)
-- `ALLOWED_HOSTS` (через запятую, напр. `localhost,127.0.0.1`)
-- `SQL_ENGINE` (по умолчанию `django.db.backends.postgresql`)
-- `SQL_DATABASE`, `SQL_USER`, `SQL_PASSWORD`, `SQL_HOST`, `SQL_PORT`
-- `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` (локально: `redis://127.0.0.1:6379/0`, в Docker: `redis://redis:6379/0`)
-- `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` (Gmail SMTP)
-Опциональные:
-- `BASE_URL` (по умолчанию `http://localhost:8000`)
+# Создать суперпользователя
+python manage.py createsuperuser
 
-## Статика и медиа
-- Статика: `STATIC_URL = 'static/'`, исходники в `static/`, сборка в `staticfiles/`.
-- Команда сборки статики (обычно для prod):
-```bash
-python puddle/manage.py collectstatic
-```
-- Медиа загружаются в `media/`.
+# Запустить сервер разработки
+python manage.py runserver
 
-## Фоновые задачи
-Определены в `puddle/notifications/tasks.py`, расписание в `puddle/puddle/settings.py` (`CELERY_BEAT_SCHEDULE`). Основные задачи:
-- `send_daily_notifications` — ежедневные уведомления пользователям.
-- `cleanup_abandoned_carts` — удаление заброшенных корзин старше N дней.
-- `generate_daily_report` — ежедневный отчёт, отправка email админу, сохранение PDF в `media/reports/*.pdf`.
-- `send_daily_discounts` — рассылка скидок по товарам со скидками.
-- `send_abandoned_cart_reminder` — напоминания о забытых корзинах.
-В режиме `DEBUG=True` многие задачи работают в «симуляции» отправки.
+# В отдельном терминале запустить Celery
+celery -A puddle worker -l info
 
-## Тестирование
-Запуск тестов:
-```bash
-pytest
-```
-С покрытием:
-```bash
-pytest --cov
-```
+# В третьем терминале запустить Celery Beat
+celery -A puddle beat -l info
+⚙️ Конфигурация
+Переменные окружения (.env)
+bash
+# Django
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1
+BASE_URL=http://localhost:8000
 
-## Полезные команды
-```bash
-# миграции
-python puddle/manage.py makemigrations
-python puddle/manage.py migrate
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/puddle_db
 
-# создание суперпользователя
-python puddle/manage.py createsuperuser
+# Redis
+REDIS_URL=redis://localhost:6379/0
 
-# сбор статики
-python puddle/manage.py collectstatic
+# Email
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
 
-# запуск celery локально
-celery -A puddle.puddle.celery_app:app worker -l info
-celery -A puddle.puddle.celery_app:app beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-```
+# Email Verification
+EMAIL_VERIFICATION_REQUIRED=True
+EMAIL_CONFIRMATION_EXPIRE_DAYS=7
 
-## Безопасность и прод-настройки
-- `DEBUG=False` в проде, корректные `ALLOWED_HOSTS`.
-- Секреты хранить в переменных окружения/секрет-менеджере.
-- Пробросить volumes для `media/`, `staticfiles/`, `logs/`.
-- Рассмотреть Redis-кеш в проде (сейчас FileBasedCache).
+# CORS (для API)
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+Настройка email для Gmail
+Включите 2FA в вашем Google аккаунте
+Создайте App Password
+Используйте App Password в EMAIL_HOST_PASSWORD
+📚 API Документация
+Endpoints Overview
+После запуска сервера доступны:
 
----
-Автор: вы. Лицензирование и контактная информация — по необходимости.
+Swagger UI: http://localhost:8000/api/docs/
+ReDoc: http://localhost:8000/api/redoc/
+OpenAPI Schema: http://localhost:8000/api/schema/
+Основные endpoints
+Аутентификация
+POST   /api/v1/users/                    - Регистрация
+GET    /api/v1/users/me/                 - Текущий пользователь
+PUT    /api/v1/users/change_password/   - Смена пароля
+GET    /api/v1/users/email_status/       - Статус email
+Товары и категории
+GET    /api/v1/categories/               - Список категорий
+GET    /api/v1/products/                 - Список товаров
+GET    /api/v1/products/{slug}/          - Детали товара
+GET    /api/v1/products/discounted/      - Товары со скидками
+GET    /api/v1/products/search/?q=text   - Поиск
+Корзина
+GET    /api/v1/cart/                     - Просмотр корзины
+POST   /api/v1/cart/                     - Добавить товар
+PUT    /api/v1/cart/{id}/                - Обновить количество
+DELETE /api/v1/cart/{id}/                - Удалить товар
+GET    /api/v1/cart/summary/             - Сводка корзины
+DELETE /api/v1/cart/clear/               - Очистить корзину
+Заказы
+GET    /api/v1/orders/                   - Список заказов
+POST   /api/v1/orders/                   - Создать заказ
+GET    /api/v1/orders/{id}/              - Детали заказа
+GET    /api/v1/orders/my_orders/         - Мои заказы
+GET    /api/v1/orders/statistics/        - Статистика (admin)
+Примеры использования
+Регистрация пользователя
+bash
+curl -X POST http://localhost:8000/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "newuser",
+    "email": "user@example.com",
+    "password": "SecurePass123!",
+    "password2": "SecurePass123!",
+    "first_name": "John",
+    "last_name": "Doe"
+  }'
+Получение товаров со скидками
+bash
+curl http://localhost:8000/api/v1/products/discounted/
+Создание заказа
+bash
+curl -X POST http://localhost:8000/api/v1/orders/ \
+  -H "Content-Type: application/json" \
+  -H "Cookie: sessionid=your-session-id" \
+  -d '{
+    "phone_number": "+79001234567",
+    "requires_delivery": true,
+    "delivery_address": "Moscow, Red Square, 1",
+    "payment_on_get": true
+  }'
+📁 Структура проекта
+Django/
+├── puddle/                     # Главный проект
+│   ├── puddle/                 # Настройки проекта
+│   │   ├── settings.py         # Конфигурация Django
+│   │   ├── urls.py             # Главные URL
+│   │   └── celery.py           # Конфигурация Celery
+│   ├── users/                  # Приложение пользователей
+│   │   ├── models.py           # Модель User
+│   │   ├── views.py            # Веб-views
+│   │   ├── serializers.py      # API serializers
+│   │   └── viewsets.py         # API viewsets
+│   ├── goods/                  # Товары и категории
+│   │   ├── models.py           # Products, Categories
+│   │   ├── serializers.py      # API serializers
+│   │   └── viewsets.py         # API viewsets
+│   ├── carts/                  # Корзина
+│   │   ├── models.py           # Cart model
+│   │   ├── serializers.py      # API serializers
+│   │   └── viewsets.py         # API viewsets
+│   ├── orders/                 # Заказы
+│   │   ├── models.py           # Order, OrderItem
+│   │   ├── serializers.py      # API serializers
+│   │   └── viewsets.py         # API viewsets
+│   ├── notifications/          # Email уведомления
+│   │   ├── tasks.py            # Celery задачи
+│   │   └── templates/email/    # Email шаблоны
+│   ├── api_urls.py             # API routing
+│   ├── manage.py               # Django CLI
+│   └── requirements.txt        # Python зависимости
+├── docker-compose.yml          # Docker конфигурация
+├── Dockerfile                  # Docker образ
+├── .env.example                # Пример переменных окружения
+├── .gitignore                  # Git ignore правила
+└── README.md                   # Этот файл
+🚢 Развёртывание
+Production Checklist
+ DEBUG = False в production
+ Настроить ALLOWED_HOSTS
+ Использовать PostgreSQL (не SQLite)
+ Настроить Redis для кеширования
+ Собрать статику: python manage.py collectstatic
+ Использовать Gunicorn/uWSGI
+ Настроить HTTPS/SSL
+ Настроить Nginx как reverse proxy
+ Включить логирование
+ Настроить мониторинг (Sentry)
+ Регулярные бэкапы БД
+ Переменные окружения в секретах
+Docker Production
+bash
+# Собрать production образ
+docker-compose -f docker-compose.prod.yml build
+
+# Запустить в production режиме
+docker-compose -f docker-compose.prod.yml up -d
+
+# Выполнить миграции
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
+
+# Собрать статику
+docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+Heroku Deployment
+bash
+# Установить Heroku CLI
+# Войти в аккаунт
+heroku login
+
+# Создать приложение
+heroku create puddle-app
+
+# Добавить PostgreSQL
+heroku addons:create heroku-postgresql:hobby-dev
+
+# Добавить Redis
+heroku addons:create heroku-redis:hobby-dev
+
+# Установить переменные окружения
+heroku config:set SECRET_KEY=your-secret-key
+heroku config:set DEBUG=False
+heroku config:set ALLOWED_HOSTS=puddle-app.herokuapp.com
+
+# Деплой
+git push heroku main
+
+# Выполнить миграции
+heroku run python puddle/manage.py migrate
+
+# Создать суперпользователя
+heroku run python puddle/manage.py createsuperuser
+🧪 Тестирование
+bash
+# Запустить все тесты
+python manage.py test
+
+# С покрытием кода
+coverage run --source='.' manage.py test
+coverage report
+coverage html  # Создаст htmlcov/index.html
+
+# Запустить конкретное приложение
+python manage.py test users
+python manage.py test goods
+
+# Запустить с verbose
+python manage.py test --verbosity=2
+📊 Мониторинг и логирование
+Логирование
+Логи сохраняются в:
+
+Консоль (development)
+Файлы в logs/ (production)
+Sentry (production errors)
+Celery мониторинг
+bash
+# Flower - веб-интерфейс для Celery
+celery -A puddle flower
+
+# Доступно на http://localhost:5555
+🤝 Разработка
+Создание нового приложения
+bash
+python manage.py startapp app_name
+Создание миграций
+bash
+python manage.py makemigrations
+python manage.py migrate
+Создание суперпользователя
+bash
+python manage.py createsuperuser
+Code Style
+Проект следует PEP 8. Используйте:
+
+bash
+# Форматирование
+black .
+
+# Линтинг
+flake8
+
+# Проверка типов
+mypy .
+📝 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+👥 Авторы
+Your Name - Initial work - YourGithub
+🙏 Благодарности
+Django team за отличный фреймворк
+DRF community за REST framework
+Всем контрибьюторам open-source библиотек
+📞 Контакты
+Email: your.email
+example.com
+GitHub: [yourusername](cci:4://file://yourusername](https://github.com/yourusername):0:0-0:0)
+LinkedIn: Your Name
+⭐ Если этот проект был полезен, поставьте звезду!

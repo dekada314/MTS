@@ -13,7 +13,49 @@ from common.mixins import CacheMixin
 from orders.models import Order, OrderItem
 
 from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
+import secrets
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.html import strip_tags
+from django.views import View
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 
+User = get_user_model()
+
+class EmailVerificationView(View):
+    """Handle email verification via token link."""
+    
+    def get(self, request, token):
+        try:
+            user = get_object_or_404(User, verification_token=token)
+            
+            if user.email_verified:
+                messages.info(request, 'Ваш email уже подтверждён!')
+                return redirect('main:index')
+            
+            if not user.is_token_valid():
+                messages.error(
+                    request, 
+                    'Ссылка устарела. Пожалуйста, свяжитесь с поддержкой.'
+                )
+                return redirect('main:index')
+            
+            # Verify email
+            user.email_verified = True
+            user.verification_token = None
+            user.token_created_at = None
+            user.save(update_fields=['email_verified', 'verification_token', 'token_created_at'])
+            
+            messages.success(request, 'Ваш email успешно подтверждён! Теперь вы можете оформлять заказы.')
+            return redirect('users:profile')
+            
+        except Http404:
+            messages.error(request, 'Неверная ссылка для подтверждения.')
+            return redirect('main:index')
 
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
@@ -62,13 +104,55 @@ class UserRegistrationView(CreateView):
 
         if user:
             form.save()
+            
+            # Send verification email
+            self._send_verification_email(user)
+            
+            # Log user in (but they need to verify email to place orders)
             auth.login(self.request, user)
 
         if session_key:
             Cart.objects.filter(session_key=session_key).update(user=user)
 
-        messages.success(self.request, f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт")
+        if getattr(settings, 'EMAIL_VERIFICATION_REQUIRED', True):
+            messages.success(
+                self.request, 
+                f"{user.username}, Вы успешно зарегистрированы! Проверьте email для подтверждения."
+            )
+        else:
+            messages.success(self.request, f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт")
+        
         return HttpResponseRedirect(self.success_url)
+    
+    def _send_verification_email(self, user):
+        """Отправить письмо со ссылкой для подтверждения email."""
+        try:
+            verification_url = self.request.build_absolute_uri(
+                reverse('users:verify_email', kwargs={'token': user.verification_token})
+            )
+            
+            context = {
+                'user': user,
+                'verification_url': verification_url,
+                'expiry_days': getattr(settings, 'EMAIL_CONFIRMATION_EXPIRE_DAYS', 7)
+            }
+            
+            html_message = render_to_string('email/email_verification.html', context)
+            plain_message = strip_tags(html_message)
+            
+            send_mail(
+                subject='Подтвердите ваш email - Puddle',
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+        except Exception as e:
+            # Log error but don't fail registration
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to send verification email to {user.email}: {str(e)}")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

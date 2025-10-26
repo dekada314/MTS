@@ -1,77 +1,183 @@
+# ========================================
 # Git
+# ========================================
 .git
 .gitignore
+.gitattributes
+.github/
 
+# ========================================
 # Python
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-.Python
-env
-pip-log.txt
-pip-delete-this-directory.txt
-.tox
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git
-.mypy_cache
-.pytest_cache
-.hypothesis
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
 
+# ========================================
+# Virtual Environments
+# ========================================
+venv/
+env/
+ENV/
+.venv/
+venv.bak/
+env.bak/
+
+# ========================================
 # Django
+# ========================================
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media
-staticfiles
+/media
+/staticfiles
+*.pot
 
-# Celery
-celerybeat-schedule
-celerybeat.pid
-
-# Environment variables
+# ========================================
+# Environment & Secrets
+# ========================================
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+.env.local
+.env.*.local
+*.env
+.envrc
+secrets.json
+*.pem
+*.key
+*.crt
 
-# IDE
+# ========================================
+# IDEs and Editors
+# ========================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.history/
 
-# Docker
-Dockerfile*
-docker-compose*
-.dockerignore
+# ========================================
+# Testing & Coverage
+# ========================================
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+coverage.xml
+*.cover
+nosetests.xml
 
+# ========================================
 # Documentation
-README.md
+# ========================================
+docs/
 *.md
+README.md
+LICENSE
+CHANGELOG.md
+CONTRIBUTING.md
+.readthedocs.yml
 
-# Tests
-tests/
-test_*
-*_test.py
+# ========================================
+# CI/CD
+# ========================================
+.github/
+.gitlab-ci.yml
+.travis.yml
+azure-pipelines.yml
+.circleci/
+Jenkinsfile
 
+# ========================================
+# Docker
+# ========================================
+Dockerfile
+docker-compose*.yml
+.dockerignore
+*.dockerfile
+
+# ========================================
+# Development files
+# ========================================
+.editorconfig
+.pylintrc
+.flake8
+.bandit
+pytest.ini
+setup.py
+setup.cfg
+tox.ini
+Makefile
+
+# ========================================
+# Temporary & Cache files
+# ========================================
+*.tmp
+*.temp
+*.cache
+tmp/
+temp/
+cache/
+.cache/
+
+# ========================================
+# OS Files
+# ========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ========================================
+# Backup files
+# ========================================
+*.bak
+*.backup
+*.old
+*.orig
+
+# ========================================
+# Logs
+# ========================================
+*.log
+logs/
+*.out
+
+# ========================================
+# Node (if present)
+# ========================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# ========================================
+# Project Specific
+# ========================================
+# Keep these in the image if needed for production
+# Uncomment to exclude from image:
+# migrations/
+# fixtures/
+# scripts/
+
+# Local development overrides
+docker-compose.override.yml
+.env.example
+
+# Media files (upload to cloud storage in production)
+media/
+
+# Static files (collect separately)
+staticfiles/
+collected_static/

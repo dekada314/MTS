@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.conf import settings
 from django.db import transaction
 from django.forms import ValidationError
 from django.shortcuts import redirect, render
@@ -28,6 +29,15 @@ class CreateOrderView(LoginRequiredMixin, FormView):
         try:
             with transaction.atomic():
                 user = self.request.user
+                
+                # Check email verification
+                if not user.can_place_order():
+                    messages.error(
+                        self.request,
+                        'Для оформления заказа необходимо подтвердить email. Проверьте вашу почту.'
+                    )
+                    return redirect('users:profile')
+                
                 cart_items = Cart.objects.filter(user=user)
 
                 if cart_items.exists():
