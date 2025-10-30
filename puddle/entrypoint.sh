@@ -1,50 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-# Apply migrations
-python manage.py makemigrations
-python manage.py migrate
+if [ "$SERVICE_ROLE" = "beat" ]; then
+  echo "⏳ Waiting for database migrations..."
+  until python -c "import django; django.setup(); from django.db import connection; connection.cursor().execute('SELECT 1 FROM django_migrations LIMIT 1;')" 2>/dev/null; do
+    echo "❓Database not ready yet..."
+    sleep 5
+  done
+  echo "✅ Database ready! Starting Celery Beat..."
+fi
 
-# Collect static files (noinput to avoid prompts)
-python manage.py collectstatic --noinput
 
-# Run create_groups to set up permissions
-python manage.py create_groups
 
-python manage.py loaddata fixtures/goods/cats.json
-python manage.py loaddata fixtures/goods/prod.json
+if [ "$SERVICE_ROLE" = "web" ]; then
+  echo "🚀 Running web setup..."
 
-# # Ensure superuser from env (idempotent)
-# if [ -n "${DJANGO_SUPERUSER_USERNAME:-}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD:-}" ]; then
-# python manage.py shell <<'PY'
-# import os
-# from django.contrib.auth import get_user_model
-# User = get_user_model()
-# username = os.environ["DJANGO_SUPERUSER_USERNAME", "root"]
-# email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "gudiniboy@example.com")
-# password = os.environ["DJANGO_SUPERUSER_PASSWORD", "root"]
-# user = User.objects.filter(username=username).first()
-# if not user:
-#     User.objects.create_superuser(username=username, email=email, password=password)
-# else:
-#     changed = False
-#     if not user.is_superuser:
-#         user.is_superuser = True
-#         changed = True
-#     if not user.is_staff:
-#         user.is_staff = True
-#         changed = True
-#     if password:
-#         user.set_password(password)
-#         changed = True
-#     if user.email != email:
-#         user.email = email
-#         changed = True
-#     if changed:
-#         user.save()
-# print(f"Superuser ensured: {username}")
-# PY
-# fi
+  python manage.py makemigrations --noinput || true
+  python manage.py migrate --noinput
 
-# Run the command (passed from docker-compose)
+  python manage.py collectstatic --noinput || true
+
+  python manage.py create_groups || true
+
+  python manage.py loaddata fixtures/goods/cats.json || true
+  python manage.py loaddata fixtures/goods/prod.json || true
+fi
+
+echo "✅ Starting container as role: $SERVICE_ROLE"
 exec "$@"

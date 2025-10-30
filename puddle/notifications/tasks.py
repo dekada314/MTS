@@ -33,7 +33,7 @@ def send_daily_notifications(self):
     """Отправляет ежедневные уведомления подписанным пользователям."""
     try:
         users = User.objects.filter(
-            is_active=True,
+            # is_active=True,
             email__isnull=False,
         ).select_related('subscription')
         num_users = users.count()
@@ -272,116 +272,104 @@ def send_daily_discounts(self):
 
 
 
-# notifications/tasks.py
-from celery import shared_task
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.conf import settings
-from users.models import User
-from orders.models import Order
-import logging
-from django.contrib.auth import get_user_model
 
-logger = logging.getLogger('notifications.tasks')
-
-
-
-
-
-
-
-
-User = get_user_model()
 
 @shared_task
 def send_abandoned_cart_reminder():
     print('send_abandoned_cart_reminder')
     # Calculate the time 5 days ago from now
     five_days_ago = timezone.now() - timedelta(days=5)
-    
+    try:
     # Find carts that haven't been updated in 5 days
-    abandoned_carts = Cart.objects.filter(
-        created_timestamp__lte=five_days_ago,
-        user__isnull=False  # Only carts associated with users
-    ).select_related('user', 'product').distinct('user')
+        abandoned_carts = Cart.objects.filter(
+            created_timestamp__lte=five_days_ago,
+            user__isnull=False  # Only carts associated with users
+        ).select_related('user', 'product').order_by('user_id', 'id').distinct('user_id')
 
-    for cart in abandoned_carts:
-        user = cart.user
-        # Get all carts for this user
-        user_carts = Cart.objects.filter(user=user).select_related('product')
+        if abandoned_carts.count() == 0:
+            logger.info("Нет заброшенных корзин")
+            return "Рассылка напоминаний о заброшенных корзин отправлена для 0 пользователей"
+        else:
+            for cart in abandoned_carts:
+                user = cart.user
+                # Get all carts for this user
+                user_carts = Cart.objects.filter(user=user).select_related('product')
+                
+                # Prepare email context
+                cart_items = [
+                    {
+                        'product_name': item.product.name,
+                        'quantity': item.quantity,
+                        'image_url': f"{settings.BASE_URL}{item.product.image.url}" if item.product.image else None
+                    }
+                    for item in user_carts
+                ]
+                
+                # Render email template
+                subject = f"{user.username}, Вы забыли товары в корзине!"
+                message = render_to_string('email/abandoned_cart.html', {
+                    'username': user.username,
+                    'cart_items': cart_items,
+                    'base_url': settings.BASE_URL,
+                })
+                
+                # Send email
+                send_mail(
+                    subject=subject,
+                    message='',
+                    html_message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+
+    except Exception as exc:
+        logger.error(f"Проблемы в функции send_abandoned_cart_reminder")
+        return f"Ошибка: корзины не найдены"
+
+
+@shared_task(bind=True, rate_limit='10/m', max_retries=3, retry_backoff=True)
+def send_order_confirmation(self, order_id, user_id):
+    """Отправляет письмо с подтверждением заказа пользователю."""
+    try:
+        user = User.objects.get(id=user_id, email__isnull=False)
+        order = Order.objects.get(id=order_id)
         
-        # Prepare email context
-        cart_items = [
-            {
-                'product_name': item.product.name,
-                'quantity': item.quantity,
-                'image_url': f"{settings.BASE_URL}{item.product.image.url}" if item.product.image else None
-            }
-            for item in user_carts
-        ]
-        
-        # Render email template
-        subject = f"{user.username}, Вы забыли товары в корзине!"
-        message = render_to_string('email/abandoned_cart.html', {
-            'username': user.username,
-            'cart_items': cart_items,
-            'base_url': settings.BASE_URL,
+        if not hasattr(user, 'subscription') or not user.subscription.is_subscribed:
+            logger.info(f"Пользователь {user.username} не подписан на уведомления")
+            return f"Не отправлено: пользователь {user.id} не подписан"
+
+        base_url = getattr(settings, 'BASE_URL', 'http://localhost:8000')
+        html_content = render_to_string('email/order_confirmation.html', {
+            'user': user,
+            'order': order,
+            'base_url': base_url,
+            'year': timezone.now().year,
         })
+        plain_content = strip_tags(html_content)
         
-        # Send email
-        send_mail(
-            subject=subject,
-            message='',
-            html_message=message,
+        email = EmailMultiAlternatives(
+            subject=f'Подтверждение заказа #{order.id}',
+            body=plain_content,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=False,
+            to=[user.email]
         )
+        email.attach_alternative(html_content, "text/html")
 
+        if settings.DEBUG:
+            logger.info(f"DEBUG=True: Симуляция отправки письма о заказе {order.id} для {user.email}")
+            return f"Симуляция отправки письма для заказа {order.id}"
 
-# @shared_task(bind=True, rate_limit='10/m', max_retries=3, retry_backoff=True)
-# def send_order_confirmation(self, order_id, user_id):
-#     """Отправляет письмо с подтверждением заказа пользователю."""
-#     try:
-#         user = User.objects.get(id=user_id, email__isnull=False)
-#         order = Order.objects.get(id=order_id)
-        
-#         if not hasattr(user, 'subscription') or not user.subscription.is_subscribed:
-#             logger.info(f"Пользователь {user.username} не подписан на уведомления")
-#             return f"Не отправлено: пользователь {user.id} не подписан"
+        email.send()
+        logger.info(f"Письмо о заказе {order.id} отправлено пользователю {user.email}")
+        return f"Письмо отправлено для заказа {order.id}"
 
-#         base_url = getattr(settings, 'BASE_URL', 'http://localhost:8000')
-#         html_content = render_to_string('email/order_confirmation.html', {
-#             'user': user,
-#             'order': order,
-#             'base_url': base_url,
-#             'year': timezone.now().year,
-#         })
-#         plain_content = strip_tags(html_content)
-        
-#         email = EmailMultiAlternatives(
-#             subject=f'Подтверждение заказа #{order.id}',
-#             body=plain_content,
-#             from_email=settings.DEFAULT_FROM_EMAIL,
-#             to=[user.email]
-#         )
-#         email.attach_alternative(html_content, "text/html")
-
-#         if settings.DEBUG:
-#             logger.info(f"DEBUG=True: Симуляция отправки письма о заказе {order.id} для {user.email}")
-#             return f"Симуляция отправки письма для заказа {order.id}"
-
-#         email.send()
-#         logger.info(f"Письмо о заказе {order.id} отправлено пользователю {user.email}")
-#         return f"Письмо отправлено для заказа {order.id}"
-
-#     except User.DoesNotExist:
-#         logger.error(f"Пользователь с ID {user_id} не найден")
-#         return f"Ошибка: пользователь {user_id} не найден"
-#     except Order.DoesNotExist:
-#         logger.error(f"Заказ с ID {order_id} не найден")
-#         return f"Ошибка: заказ {order_id} не найден"
-#     except Exception as exc:
-#         logger.error(f"Ошибка в send_order_confirmation для заказа {order_id}: {exc}", exc_info=True)
-#         self.retry(exc=exc, countdown=300)
+    except User.DoesNotExist:
+        logger.error(f"Пользователь с ID {user_id} не найден")
+        return f"Ошибка: пользователь {user_id} не найден"
+    except Order.DoesNotExist:
+        logger.error(f"Заказ с ID {order_id} не найден")
+        return f"Ошибка: заказ {order_id} не найден"
+    except Exception as exc:
+        logger.error(f"Ошибка в send_order_confirmation для заказа {order_id}: {exc}", exc_info=True)
+        self.retry(exc=exc, countdown=300)

@@ -257,7 +257,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "puddle.wsgi.application"
-
+MEDIA_ROOT
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

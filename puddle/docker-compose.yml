@@ -36,6 +36,7 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=puddle.settings
+      - SERVICE_ROLE=web
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=puddle
       - SQL_USER=puddle_user
@@ -47,6 +48,9 @@ services:
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - DEBUG=${DEBUG}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
     depends_on:
       db:
         condition: service_healthy
@@ -61,6 +65,7 @@ services:
       - .:/app
     environment:
       - DJANGO_SETTINGS_MODULE=puddle.settings
+      - SERVICE_ROLE=worker
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=puddle
       - SQL_USER=puddle_user
@@ -86,6 +91,7 @@ services:
       - .:/app
     environment:
       - DJANGO_SETTINGS_MODULE=puddle.settings
+      - SERVICE_ROLE=beat
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=puddle
       - SQL_USER=puddle_user
