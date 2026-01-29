@@ -194,7 +194,7 @@ CELERY_TASK_EAGER_PROPAGATES = True  # Пропагировать исключе
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # DEBUG = False
 BASE_URL = "http://localhost:8000"
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
