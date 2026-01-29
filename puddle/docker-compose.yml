@@ -30,7 +30,7 @@ services:
     command: gunicorn puddle.wsgi:application --bind 0.0.0.0:8000 --workers 3
     volumes:
       - .:/app
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
       - "8000:8000"
@@ -63,6 +63,8 @@ services:
     command: celery -A puddle worker -l info
     volumes:
       - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=puddle.settings
       - SERVICE_ROLE=worker
@@ -89,6 +91,8 @@ services:
     command: celery -A puddle beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=puddle.settings
       - SERVICE_ROLE=beat

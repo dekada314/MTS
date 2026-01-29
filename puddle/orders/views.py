@@ -31,12 +31,12 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                 user = self.request.user
                 
                 # Check email verification
-                if not user.can_place_order():
-                    messages.error(
-                        self.request,
-                        'Для оформления заказа необходимо подтвердить email. Проверьте вашу почту.'
-                    )
-                    return redirect('users:profile')
+                # if not user.can_place_order():
+                #     messages.error(
+                #         self.request,
+                #         'Для оформления заказа необходимо подтвердить email. Проверьте вашу почту.'
+                #     )
+                #     return redirect('users:profile')
                 
                 cart_items = Cart.objects.filter(user=user)
 

@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 COPY requirements.txt .
+RUN mkdir -p /app/media/reports /app/staticfiles
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy project code and entrypoint
@@ -28,9 +29,9 @@ RUN chmod +x entrypoint.sh
 # Multi-stage for production build
 FROM base AS production
 
-# Create non-root user for security
-RUN useradd -m appuser && chown -R appuser:appuser $APP_HOME
-USER appuser
+# # Create non-root user for security
+# RUN useradd -m appuser && chown -R appuser:appuser $APP_HOME
+# USER appuser
 
 # Expose port for Django
 EXPOSE 8000
