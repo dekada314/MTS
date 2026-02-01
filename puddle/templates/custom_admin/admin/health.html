@@ -1,0 +1,12 @@
+{% extends "custom_admin/admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1>{% trans "Health" %}</h1>
+  <div class="custom-admin-card">
+    <dl>
+      <dt>{% trans "Database" %}</dt><dd>{{ db_ok }}</dd>
+      <dt>{% trans "User" %}</dt><dd>{{ request.user }}</dd>
+    </dl>
+  </div>
+{% endblock %}

@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 COPY requirements.txt .
-RUN mkdir -p /app/media/reports /app/staticfiles
+RUN mkdir -p /app/m/reports /app/staticfiles
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy project code and entrypoint

@@ -3,7 +3,7 @@ import os
 import logging
 from time import sleep
 from datetime import datetime, timedelta
-from celery import shared_task, chain
+from celery import shared_task, chain, group
 from celery.utils.log import get_task_logger
 from django.core.mail import send_mail, send_mass_mail, EmailMultiAlternatives, get_connection
 from django.template import Template, Context
@@ -28,19 +28,45 @@ DELAY_BETWEEN_BATCHES = 2
 DEFAULT_FROM_EMAIL = getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@gmail.com')
 ADMIN_EMAIL = getattr(settings, 'ADMIN_EMAIL', 'gudiniboy@gmail.com')
 
+def _chunks(items, size):
+    for i in range(0, len(items), size):
+        yield items[i:i + size]
+
 @shared_task(bind=True, max_retries=3, retry_backoff=True)
 def send_daily_notifications(self):
     """Отправляет ежедневные уведомления подписанным пользователям."""
     try:
-        users = User.objects.filter(
-            # is_active=True,
-            email__isnull=False,
-        ).select_related('subscription')
-        num_users = users.count()
-        if not num_users:
+        user_ids = list(
+            User.objects.filter(
+                is_active=True,
+                email__isnull=False,
+                subscription__is_subscribed=True,
+            ).values_list("id", flat=True)
+        )
+        num_users = len(user_ids)
+        if num_users == 0:
             logger.info("Нет пользователей с email")
             return "Нет пользователей для отправки"
 
+        if settings.DEBUG:
+            logger.info(f"DEBUG=True: Симуляция отправки {num_users} уведомлений")
+            return f"Уведомления симулированы для {num_users} пользователей"
+
+        batches = list(_chunks(user_ids, BATCH_SIZE))
+        job = group(send_daily_notifications_batch.s(batch) for batch in batches)
+        job.apply_async()
+        logger.info(f"Запущена рассылка: {num_users} пользователей, {len(batches)} батчей")
+        return f"Рассылка запущена для {num_users} пользователей"
+
+    except Exception as exc:
+        logger.error(f"Ошибка в send_daily_notifications: {exc}", exc_info=True)
+        self.retry(exc=exc, countdown=300)
+
+
+@shared_task(bind=True, max_retries=3, retry_backoff=True)
+def send_daily_notifications_batch(self, user_ids):
+    try:
+        users = User.objects.filter(id__in=user_ids, email__isnull=False)
         messages = [
             (
                 'Ежедневное уведомление от Home',
@@ -50,24 +76,18 @@ def send_daily_notifications(self):
             )
             for user in users
         ]
-
-        if settings.DEBUG:
-            logger.info(f"DEBUG=True: Симуляция отправки {num_users} уведомлений")
-            return f"Уведомления симулированы для {num_users} пользователей"
-
+        if not messages:
+            return 0
         sent = send_mass_mail(messages, fail_silently=False)
-        logger.info(f"Отправлено {sent} уведомлений")
-        return f"Реальные уведомления отправлены {sent} пользователям"
-
+        return sent
     except Exception as exc:
-        logger.error(f"Ошибка в send_daily_notifications: {exc}", exc_info=True)
-        self.retry(exc=exc, countdown=300)
+        logger.error(f"Ошибка в send_daily_notifications_batch: {exc}", exc_info=True)
+        raise
 
 
 TIME_FOR_ABANDONED = 30
 @shared_task(bind=True, max_retries=3, retry_backoff=True)
 def cleanup_abandoned_carts(self):
-    
     """Удаляет корзины, созданные более 30 дней назад."""
     try:
         one_month_ago = timezone.now() - timedelta(days=TIME_FOR_ABANDONED)
@@ -85,193 +105,76 @@ def cleanup_abandoned_carts(self):
         logger.error(f"Ошибка в cleanup_abandoned_carts: {exc}", exc_info=True)
         self.retry(exc=exc, countdown=300)
 
-@shared_task(bind=True, max_retries=3, retry_backoff=True)
-def generate_daily_report(self):
-    print('generate_daily_report')
-    """Создаёт и отправляет ежедневный отчёт, сохраняет PDF."""
-    try:
-        today = timezone.now().date()
-        carts_today = Cart.objects.filter(created_timestamp__date=today)
-        carts_items_count = sum(cart.quantity for cart in carts_today if hasattr(cart, 'quantity')) or 0
-        orders_today = Order.objects.filter(created_timestamp__date=today)
-        orders_items_count = orders_today.count()
-
-        report_message = (
-            f"Daily report for {today}:\n"
-            f"- Things in carts: {carts_items_count}\n"
-            f"- Amount of orders: {orders_items_count}"
-        )
-
-        if settings.DEBUG:
-            logger.info(f"DEBUG=True: Симуляция отправки отчёта: {report_message}")
-        else:
-            send_mail(
-                subject='Ежедневный отчёт по мебели',
-                message=report_message,
-                from_email=DEFAULT_FROM_EMAIL,
-                recipient_list=[ADMIN_EMAIL],
-                fail_silently=False,
-            )
-
-        report_dir = os.path.join(settings.MEDIA_ROOT, 'reports')
-        os.makedirs(report_dir, exist_ok=True)
-        pdf_filename = f'daily_report_{today}.pdf'
-        pdf_path = os.path.join(report_dir, pdf_filename)
-
-        c = canvas.Canvas(pdf_path, pagesize=letter)
-        c.setFont("Helvetica-Bold", 16)
-        c.drawString(100, letter[1] - 100, f"Daily report for {today}")
-        c.setFont("Helvetica", 12)
-        text = c.beginText(100, letter[1] - 150)
-        for line in report_message.split('\n'):
-            text.textLine(line)
-        c.drawText(text)
-        c.save()
-
-        logger.info(f"Отчёт сгенерирован: {pdf_path}")
-        return f"Отчёт отправлен и PDF сохранён: {pdf_path}"
-
-    except Exception as exc:
-        logger.error(f"Ошибка в generate_daily_report: {exc}", exc_info=True)
-        self.retry(exc=exc, countdown=300)
-
-# @shared_task(bind=True, rate_limit='10/m', max_retries=3, retry_backoff=True)
-# def send_batch_emails(self, message_template, subject, batch_user_ids, from_email=DEFAULT_FROM_EMAIL):
-#     """Отправляет батч email на основе шаблона."""
-#     try:
-#         users = User.objects.filter(
-#             id__in=batch_user_ids,
-#             is_active=True,
-#             email__isnull=False,
-#             subscription__is_subscribed=True
-#         ).select_related('subscription')
-#         num_users = users.count()
-#         if not num_users:
-#             logger.info("Нет пользователей для отправки в батче")
-#             return "Батч отправлен: 0 пользователей"
-
-#         messages = []
-#         for user in users:
-#             context = Context({'user': user, 'message': message_template})
-#             rendered_message = Template(message_template).render(context)
-#             messages.append((subject, rendered_message, from_email, [user.email]))
-
-#         if settings.DEBUG:
-#             logger.info(f"DEBUG=True: Симуляция отправки {num_users} email")
-#             for msg in messages:
-#                 logger.info(f"  - {msg[0]} to {msg[3][0]}: {msg[1][:50]}...")
-#             return f"Батч симулирован: {num_users} пользователей"
-
-#         sent = send_mass_mail(messages, fail_silently=False)
-#         logger.info(f"Отправлено {sent} email в батче")
-#         return f"Батч отправлен: {sent} пользователей"
-
-#     except Exception as exc:
-#         logger.error(f"Ошибка в send_batch_emails: {exc}", exc_info=True)
-#         self.retry(exc=exc, countdown=300)
-
-# @shared_task
-# def send_mass_notifications(message, subject, user_ids=None, batch_size=BATCH_SIZE, delay=DELAY_BETWEEN_BATCHES, dry_run=False):
-#     """Запускает массовую рассылку уведомлений с разбивкой на батчи."""
-#     print('send_mass_notifications')
-#     try:
-#         if user_ids is None:
-#             user_ids = list(
-#                 User.objects.filter(
-#                     is_active=True,
-#                     email__isnull=False,
-#                     subscription__is_subscribed=True
-#                 ).values_list('id', flat=True)
-#             )
-
-#         num_users = len(user_ids)
-#         if num_users == 0:
-#             logger.info("Нет пользователей для массовой рассылки")
-#             return "Нет пользователей для отправки"
-
-#         if dry_run or settings.DEBUG:
-#             logger.info(f"Dry-run/DEBUG: Симуляция отправки {num_users} сообщений")
-#             return f"Dry-run/DEBUG завершён: {num_users} симулировано"
-
-#         if num_users <= batch_size:
-#             send_batch_emails.delay(message, subject, user_ids)
-#         else:
-#             num_batches = math.ceil(num_users / batch_size)
-#             tasks = []
-#             for i in range(num_batches):
-#                 batch_ids = user_ids[i * batch_size: (i + 1) * batch_size]
-#                 tasks.append(send_batch_emails.s(message, subject, batch_ids))
-#                 if i < num_batches - 1:
-#                     tasks.append(shared_task(lambda x=i: sleep(delay)))
-#             chain(*tasks).delay()
-
-#         logger.info(f"Рассылка запущена для {num_users} пользователей")
-#         return f"Рассылка {'симулирована' if settings.DEBUG else 'запущена'} для {num_users} пользователей"
-
-#     except Exception as exc:
-#         logger.error(f"Ошибка в send_mass_notifications: {exc}", exc_info=True)
-#         raise
 
 @shared_task(bind=True, rate_limit='10/m', max_retries=3, retry_backoff=True)
 def send_daily_discounts(self):
     print('send_daily_discounts')
     """Отправляет уведомления о скидках на товары."""
     try:
-        products = Products.objects.filter(discount__gt=0)
-        if not products.exists():
+        discounted_product_ids = list(Products.objects.filter(discount__gt=0).values_list("id", flat=True))
+        if not discounted_product_ids:
             logger.info("Нет товаров со скидками для рассылки")
             return "Нет товаров со скидками для рассылки"
 
-        users = User.objects.filter(
-            # is_active=True,
-            email__isnull=False,
-            # subscription__is_subscribed=True
-        ).select_related('subscription')
-        num_users = users.count()
+        user_ids = list(
+            User.objects.filter(
+                is_active=True,
+                email__isnull=False,
+                subscription__is_subscribed=True,
+            ).values_list("id", flat=True)
+        )
+        num_users = len(user_ids)
         if num_users == 0:
             logger.info("Нет активных подписанных пользователей для рассылки скидок")
             return "Рассылка скидок завершена для 0 пользователей"
 
-        paginator = Paginator(users, BATCH_SIZE)
-        for page_num in paginator.page_range:
-            page_users = paginator.page(page_num).object_list
-            messages = []
-            for user in page_users:
-                base_url = getattr(settings, 'BASE_URL', 'http://localhost:8000')
-                html_content = render_to_string('email/daily_discounts.html', {
-                    'user': user,
-                    'products': products,
-                    'base_url': base_url,
-                    'year': datetime.now().year,
-                })
-                plain_content = strip_tags(html_content)
-                msg = EmailMultiAlternatives(
-                    subject='Ежедневные скидки на мебель',
-                    body=plain_content,
-                    from_email=DEFAULT_FROM_EMAIL,
-                    to=[user.email]
-                )
-                msg.attach_alternative(html_content, "text/html")
-                messages.append(msg)
+        if settings.DEBUG:
+            logger.info(f"DEBUG=True: Симуляция отправки {num_users} писем о скидках")
+            return f"Рассылка скидок симулирована для {num_users} пользователей"
 
-            if messages:
-                if settings.DEBUG:
-                    logger.info(f"DEBUG=True: Симуляция отправки {len(messages)} писем")
-                    for msg in messages:
-                        logger.info(f"  - {msg.subject} to {msg.to[0]}")
-                else:
-                    connection = get_connection()
-                    sent = connection.send_messages(messages)
-                    logger.info(f"Отправлено {len(messages)} писем о скидках")
-
-        return f"Рассылка скидок {'симулирована' if settings.DEBUG else 'завершена'} для {num_users} пользователей"
+        batches = list(_chunks(user_ids, BATCH_SIZE))
+        job = group(send_daily_discounts_batch.s(batch, discounted_product_ids) for batch in batches)
+        job.apply_async()
+        return f"Рассылка скидок запущена для {num_users} пользователей"
 
     except Exception as exc:
         logger.error(f"Ошибка в send_daily_discounts: {exc}", exc_info=True)
         self.retry(exc=exc, countdown=300)
 
 
+@shared_task(bind=True, max_retries=3, retry_backoff=True)
+def send_daily_discounts_batch(self, user_ids, discounted_product_ids):
+    try:
+        products = Products.objects.filter(id__in=discounted_product_ids)
+        users = User.objects.filter(id__in=user_ids, email__isnull=False)
+        messages = []
+        base_url = getattr(settings, 'BASE_URL', 'http://localhost:8000')
+        for user in users:
+            html_content = render_to_string('email/daily_discounts.html', {
+                'user': user,
+                'products': products,
+                'base_url': base_url,
+                'year': datetime.now().year,
+            })
+            plain_content = strip_tags(html_content)
+            msg = EmailMultiAlternatives(
+                subject='Ежедневные скидки на мебель',
+                body=plain_content,
+                from_email=DEFAULT_FROM_EMAIL,
+                to=[user.email]
+            )
+            msg.attach_alternative(html_content, "text/html")
+            messages.append(msg)
 
+        if not messages:
+            return 0
+
+        connection = get_connection()
+        sent = connection.send_messages(messages)
+        return sent
+    except Exception as exc:
+        logger.error(f"Ошибка в send_daily_discounts_batch: {exc}", exc_info=True)
+        raise
 
 
 @shared_task
@@ -280,52 +183,66 @@ def send_abandoned_cart_reminder():
     # Calculate the time 5 days ago from now
     five_days_ago = timezone.now() - timedelta(days=5)
     try:
-    # Find carts that haven't been updated in 5 days
-        abandoned_carts = Cart.objects.filter(
-            created_timestamp__lte=five_days_ago,
-            user__isnull=False  # Only carts associated with users
-        ).select_related('user', 'product').order_by('user_id', 'id').distinct('user_id')
+        user_ids = list(
+            Cart.objects.filter(
+                created_timestamp__lte=five_days_ago,
+                user__isnull=False,
+            ).values_list("user_id", flat=True).distinct()
+        )
 
-        if abandoned_carts.count() == 0:
+        if len(user_ids) == 0:
             logger.info("Нет заброшенных корзин")
             return "Рассылка напоминаний о заброшенных корзин отправлена для 0 пользователей"
-        else:
-            for cart in abandoned_carts:
-                user = cart.user
-                # Get all carts for this user
-                user_carts = Cart.objects.filter(user=user).select_related('product')
-                
-                # Prepare email context
-                cart_items = [
-                    {
-                        'product_name': item.product.name,
-                        'quantity': item.quantity,
-                        'image_url': f"{settings.BASE_URL}{item.product.image.url}" if item.product.image else None
-                    }
-                    for item in user_carts
-                ]
-                
-                # Render email template
-                subject = f"{user.username}, Вы забыли товары в корзине!"
-                message = render_to_string('email/abandoned_cart.html', {
-                    'username': user.username,
-                    'cart_items': cart_items,
-                    'base_url': settings.BASE_URL,
-                })
-                
-                # Send email
-                send_mail(
-                    subject=subject,
-                    message='',
-                    html_message=message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[user.email],
-                    fail_silently=False,
-                )
+
+        if settings.DEBUG:
+            logger.info(f"DEBUG=True: Симуляция напоминаний о корзине для {len(user_ids)} пользователей")
+            return f"Рассылка напоминаний симулирована для {len(user_ids)} пользователей"
+
+        job = group(send_abandoned_cart_reminder_to_user.s(user_id) for user_id in user_ids)
+        job.apply_async()
+        return f"Рассылка напоминаний запущена для {len(user_ids)} пользователей"
 
     except Exception as exc:
         logger.error(f"Проблемы в функции send_abandoned_cart_reminder")
         return f"Ошибка: корзины не найдены"
+
+
+@shared_task(bind=True, rate_limit='30/m', max_retries=3, retry_backoff=True)
+def send_abandoned_cart_reminder_to_user(self, user_id):
+    try:
+        user = User.objects.get(id=user_id, email__isnull=False)
+        user_carts = Cart.objects.filter(user_id=user_id).select_related('product')
+        if not user_carts.exists():
+            return 0
+
+        cart_items = [
+            {
+                'product_name': item.product.name,
+                'quantity': item.quantity,
+                'image_url': f"{settings.BASE_URL}{item.product.image.url}" if item.product.image else None
+            }
+            for item in user_carts
+        ]
+
+        subject = f"{user.username}, Вы забыли товары в корзине!"
+        message = render_to_string('email/abandoned_cart.html', {
+            'username': user.username,
+            'cart_items': cart_items,
+            'base_url': settings.BASE_URL,
+        })
+
+        send_mail(
+            subject=subject,
+            message='',
+            html_message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        return 1
+    except Exception as exc:
+        logger.error(f"Ошибка в send_abandoned_cart_reminder_to_user({user_id}): {exc}", exc_info=True)
+        raise
 
 
 @shared_task(bind=True, rate_limit='10/m', max_retries=3, retry_backoff=True)

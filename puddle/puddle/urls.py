@@ -20,12 +20,15 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from puddle.admin_sites import ops_admin_site, staff_admin_site
 
 DEBUG = 1
 
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
+    path('staff-admin/', staff_admin_site.urls),
+    path('ops-admin/', ops_admin_site.urls),
     
     # Web URLs
     path('', include('main.urls', namespace='main')),

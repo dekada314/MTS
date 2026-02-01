@@ -6,9 +6,9 @@ class NotificationLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('success', 'Success'), ('failed', 'Failed'), ('simulated', 'Simulated')])\
-    
-
+    status = models.CharField(max_length=20, choices=[('success', 'Success'), ('failed', 'Failed'), ('simulated', 'Simulated')])
+     
+ 
 class Subscription(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_subscribed = models.BooleanField(default=True)

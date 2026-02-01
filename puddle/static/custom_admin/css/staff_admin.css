@@ -1,0 +1,12 @@
+:root { --custom-accent: #2b6cb0; }
+
+#header { background: var(--custom-accent); }
+#header a:link, #header a:visited { color: #fff; }
+
+.custom-admin-toolbar { margin: 0 0 16px; }
+.custom-admin-toolbar .button { background: var(--custom-accent); border-color: var(--custom-accent); }
+
+.custom-admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.custom-admin-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+.custom-admin-table { width: 100%; border-collapse: collapse; }
+.custom-admin-table th, .custom-admin-table td { border-bottom: 1px solid #e5e7eb; padding: 8px; text-align: left; }

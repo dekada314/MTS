@@ -102,10 +102,8 @@ Jenkinsfile
 # ========================================
 # Docker
 # ========================================
-Dockerfile
-docker-compose*.yml
-.dockerignore
-*.dockerfile
+# NOTE: do NOT ignore Dockerfile/docker-compose/.dockerignore
+# They are required for building/running the project.
 
 # ========================================
 # Development files

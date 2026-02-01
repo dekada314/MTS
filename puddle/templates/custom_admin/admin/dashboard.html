@@ -1,0 +1,71 @@
+{% extends "custom_admin/admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1>{% trans "Dashboard" %}</h1>
+
+  <div class="custom-admin-grid">
+    <div class="custom-admin-card">
+      <h2>{% trans "Stats" %}</h2>
+      <dl>
+        <dt>{% trans "Products" %}</dt><dd>{{ stats.products }}</dd>
+        <dt>{% trans "Categories" %}</dt><dd>{{ stats.categories }}</dd>
+        <dt>{% trans "Orders" %}</dt><dd>{{ stats.orders }}</dd>
+        <dt>{% trans "Order items" %}</dt><dd>{{ stats.order_items }}</dd>
+        <dt>{% trans "Carts" %}</dt><dd>{{ stats.carts }}</dd>
+        <dt>{% trans "Subscriptions" %}</dt><dd>{{ stats.subscriptions }}</dd>
+        <dt>{% trans "Sales (sum of item prices)" %}</dt><dd>{{ sales|default:"-" }}</dd>
+      </dl>
+    </div>
+
+    <div class="custom-admin-card">
+      <h2>{% trans "Recent orders" %}</h2>
+      <table class="custom-admin-table">
+        <thead>
+          <tr>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Created" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Paid" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in recent_orders %}
+            <tr>
+              <td>{{ o.id }}</td>
+              <td>{{ o.user }}</td>
+              <td>{{ o.created_timestamp }}</td>
+              <td>{{ o.status }}</td>
+              <td>{{ o.is_paid }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">{% trans "No data" %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="custom-admin-card">
+      <h2>{% trans "Top products" %}</h2>
+      <table class="custom-admin-table">
+        <thead>
+          <tr>
+            <th>{% trans "Product" %}</th>
+            <th>{% trans "Sold items" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in top_products %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.sales_count }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="2">{% trans "No data" %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

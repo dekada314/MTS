@@ -1,0 +1,35 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.env
+.env.*
+
+# Django
+*.log
+staticfiles/
+m/
+logs/
+
+# local DB
+*.sqlite3
+
+# media/uploads (if you ever switch to /media)
+media/
+
+# Celery beat schedule files
+celerybeat-schedule*
+
+# test/coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

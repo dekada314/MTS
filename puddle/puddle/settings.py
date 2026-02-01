@@ -53,7 +53,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Europe/Moscow"
 
-CELERY_TEST_SCHEDULE = True
+CELERY_TEST_SCHEDULE = os.getenv("CELERY_TEST_SCHEDULE", "False").lower() in ("1", "true", "yes")
 
 CELERY_BEAT_SCHEDULE = {
     # Отправка ежедневных уведомлений
@@ -91,63 +91,6 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-# CELERY_BEAT_SCHEDULE = {
-#     # 'send-daily-notifications': {
-#     #     'task': 'notifications.tasks.send_daily_notifications',
-#     #     'schedule': crontab(hour=12, minute=0),
-#     # },
-#     # 'generate-daily-report': {
-#     #     'task': 'reports.tasks.generate_daily_report',
-#     #     'schedule': crontab(hour=20, minute=22),
-#     # },
-#     # 'cleanup-abandoned-carts': {
-#     #     'task': 'reports.tasks.cleanup_abandoned_carts',
-#     #     'schedule': crontab(hour=1, minute=0),
-#     # },
-#     'send-daily-discounts': {
-#         'task': 'notifications.tasks.send_daily_discounts',
-#         # 'schedule': crontab(hour=9, minute=0),  # Reverted to 9:00 for production
-#         'schedule': crontab(minute='*/1'),  # Uncomment for testing
-#     },
-#     # 'send-abandoned-cart-reminder': {
-#     #     'task': 'notifications.tasks.send_abandoned_cart_reminder',
-#     #     # 'schedule': crontab(hour=13, minute=5),
-#     #     'schedule': crontab(minute='*/1'),  # Uncomment for testing
-#     # },
-# }
-
-# # CELERY_BEAT_SCHEDULE = {
-# #     "send-daily-notifications": {  # Твоя предыдущая задача
-# #         "task": "notifications.tasks.send_daily_notifications",
-# #         "schedule": {"type": "crontab", "hour": 12, "minute": 0},
-# #     },
-# #     "generate-daily-report": {
-# #         "task": "reports.tasks.generate_daily_report",
-# #         # "schedule": {"type": "crontab", "hour": 20, "minute": 22},  # Полночь
-# #         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
-# #     },
-# #     "cleanup-abandoned-carts": {
-# #         "task": "reports.tasks.cleanup_abandoned_carts",
-# #         "schedule": {
-# #             "type": "crontab",
-# #             "hour": 1,
-# #             "minute": 0,
-# #         },  # 01:00, чтобы не конфликтовать
-# #     },
-# #     "send-daily-discounts": {
-# #         "task": "notifications.tasks.send_daily_discounts",
-# #         # "schedule": {"type": "crontab", "hour": 9, "minute": 0},  # Каждый день в 9:00
-# #         "schedule": {"type": "crontab", "minute": '*/1'},  # Полночь
-
-# #     },
-# #         'send-abandoned-cart-reminder': {
-# #         'task': 'notifications.tasks.send_abandoned_cart_reminder',
-# #         # 'schedule': {"type": "crontab", "hour": 13, "minute": 5},
-# #         'schedule': crontab(minute='*/1'),  # Полночь
-
-# #     },
-# # }
-# {'type': 'crontab', 'minute': '*/5'}
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 # puddle/puddle/settings.py
@@ -181,11 +124,11 @@ LOGGING = {
         },
     },
 }
-# Тестовые настройки
+ # Тестовые настройки
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
-CELERY_TASK_ALWAYS_EAGER = True  # Выполнять задачи синхронно в тестах
-CELERY_TASK_EAGER_PROPAGATES = True  # Пропагировать исключения
-# EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"  # Использовать in-memory бэкенд для тестов
+CELERY_TASK_ALWAYS_EAGER = os.getenv("CELERY_TASK_ALWAYS_EAGER", "False").lower() in ("1", "true", "yes")
+CELERY_TASK_EAGER_PROPAGATES = CELERY_TASK_ALWAYS_EAGER
+ # EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"  # Использовать in-memory бэкенд для тестов
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -193,9 +136,9 @@ CELERY_TASK_EAGER_PROPAGATES = True  # Пропагировать исключе
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# DEBUG = False
+ # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", "False").lower() in ("1", "true", "yes")
+ # DEBUG = False
 BASE_URL = "http://localhost:8000"
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
@@ -218,7 +161,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "django_filters",
-    
+    "whitenoise",
     # Local apps
     "main",
     "goods",
@@ -230,6 +173,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -257,7 +201,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "puddle.wsgi.application"
-MEDIA_ROOT
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -279,6 +222,11 @@ CACHES = {
         "LOCATION": BASE_DIR / "cache",
     }
 }
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -316,7 +264,6 @@ INTERNAL_IPS = [
 ]
 
 MEDIA_URL = "/m/"
-
 MEDIA_ROOT = BASE_DIR / "m"
 
 # Static files (CSS, JavaScript, Images)

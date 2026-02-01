@@ -1,0 +1,13 @@
+{% extends "custom_admin/admin/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  {% if custom_css %}
+    <link rel="stylesheet" href="{% static custom_css %}">
+  {% endif %}
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}

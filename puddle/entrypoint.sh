@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$SERVICE_ROLE" = "beat" ]; then
+wait_for_migrations() {
   echo "⏳ Waiting for database migrations..."
   until python -c "import django; django.setup(); from django.db import connection; connection.cursor().execute('SELECT 1 FROM django_migrations LIMIT 1;')" 2>/dev/null; do
     echo "❓Database not ready yet..."
     sleep 5
   done
-  echo "✅ Database ready! Starting Celery Beat..."
+  echo "✅ Database ready!"
+}
+
+if [ "$SERVICE_ROLE" = "beat" ] || [ "$SERVICE_ROLE" = "worker" ]; then
+  wait_for_migrations
 fi
 
 
