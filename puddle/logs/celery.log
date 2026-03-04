@@ -10926,3 +10926,4 @@ Traceback (most recent call last):
 smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-48066c4f3edsm193349475e9.15 - gsmtp')
 INFO 2026-01-29 13:48:00,020 tasks Нет заброшенных корзин для удаления
 INFO 2026-01-29 13:48:00,035 tasks Нет заброшенных корзин
+INFO 2026-03-04 17:12:15,751 tasks Нет заброшенных корзин

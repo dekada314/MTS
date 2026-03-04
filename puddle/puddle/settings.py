@@ -138,7 +138,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
 
  # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() in ("1", "true", "yes")
- # DEBUG = False
+DEBUG = True
 BASE_URL = "http://localhost:8000"
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 

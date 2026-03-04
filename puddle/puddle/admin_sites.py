@@ -173,63 +173,63 @@ def mark_orders_paid(modeladmin: admin.ModelAdmin, request: HttpRequest, queryse
     queryset.update(is_paid=True)
 
 
-@admin.register(Order, site=ops_admin_site)
-class OpsOrderAdmin(admin.ModelAdmin):
-    change_form_template = "custom_admin/admin/change_form.html"
-    list_display = ("id", "user", "created_timestamp", "status", "is_paid")
-    list_filter = ("status", "is_paid", "created_timestamp")
-    search_fields = ("user__username", "phone_number", "id")
-    date_hierarchy = "created_timestamp"
-    autocomplete_fields = ("user",)
-    inlines = (OrderItemInline,)
-    actions = (mark_orders_paid,)
+# @admin.register(Order, site=ops_admin_site)
+# class OpsOrderAdmin(admin.ModelAdmin):
+#     change_form_template = "custom_admin/admin/change_form.html"
+#     list_display = ("id", "user", "created_timestamp", "status", "is_paid")
+#     list_filter = ("status", "is_paid", "created_timestamp")
+#     search_fields = ("user__username", "phone_number", "id")
+#     date_hierarchy = "created_timestamp"
+#     autocomplete_fields = ("user",)
+#     inlines = (OrderItemInline,)
+#     actions = (mark_orders_paid,)
 
-    formfield_overrides = {
-        models.TextField: {"widget": admin.widgets.AdminTextareaWidget(attrs={"rows": 4})},
-    }
+#     formfield_overrides = {
+#         models.TextField: {"widget": admin.widgets.AdminTextareaWidget(attrs={"rows": 4})},
+#     }
 
-    def get_queryset(self, request: HttpRequest):
-        qs = super().get_queryset(request)
-        qs = qs.select_related("user")
-        user = request.user
-        if user.is_superuser:
-            return qs
-        if user.groups.filter(name="Support").exists():
-            return qs.filter(is_paid=False)
-        return qs
+#     def get_queryset(self, request: HttpRequest):
+#         qs = super().get_queryset(request)
+#         qs = qs.select_related("user")
+#         user = request.user
+#         if user.is_superuser:
+#             return qs
+#         if user.groups.filter(name="Support").exists():
+#             return qs.filter(is_paid=False)
+#         return qs
 
-    def get_readonly_fields(self, request: HttpRequest, obj=None):
-        readonly = list(super().get_readonly_fields(request, obj))
-        user = request.user
-        if user.is_superuser:
-            return readonly
-        if user.groups.filter(name="Support").exists():
-            readonly.extend(["user", "phone_number", "requires_delivery", "delivery_address", "payment_on_get"])
-        return readonly
-
-
-@admin.register(OrderItem, site=ops_admin_site)
-class OpsOrderItemAdmin(admin.ModelAdmin):
-    list_display = ("order", "product", "name", "price", "quantity", "created_timestamp")
-    list_filter = ("created_timestamp",)
-    search_fields = ("name", "order__id", "product__name")
-    autocomplete_fields = ("order", "product")
-
-    def get_queryset(self, request: HttpRequest):
-        qs = super().get_queryset(request)
-        return qs.select_related("order", "product")
+#     def get_readonly_fields(self, request: HttpRequest, obj=None):
+#         readonly = list(super().get_readonly_fields(request, obj))
+#         user = request.user
+#         if user.is_superuser:
+#             return readonly
+#         if user.groups.filter(name="Support").exists():
+#             readonly.extend(["user", "phone_number", "requires_delivery", "delivery_address", "payment_on_get"])
+#         return readonly
 
 
-@admin.register(Cart, site=ops_admin_site)
-class OpsCartAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "product", "quantity", "session_key", "created_timestamp")
-    list_filter = ("created_timestamp",)
-    search_fields = ("user__username", "product__name", "session_key")
-    autocomplete_fields = ("user", "product")
+# @admin.register(OrderItem, site=ops_admin_site)
+# class OpsOrderItemAdmin(admin.ModelAdmin):
+#     list_display = ("order", "product", "name", "price", "quantity", "created_timestamp")
+#     list_filter = ("created_timestamp",)
+#     search_fields = ("name", "order__id", "product__name")
+#     autocomplete_fields = ("order", "product")
 
-    def get_queryset(self, request: HttpRequest):
-        qs = super().get_queryset(request)
-        return qs.select_related("user", "product")
+#     def get_queryset(self, request: HttpRequest):
+#         qs = super().get_queryset(request)
+#         return qs.select_related("order", "product")
+
+
+# @admin.register(Cart, site=ops_admin_site)
+# class OpsCartAdmin(admin.ModelAdmin):
+#     list_display = ("id", "user", "product", "quantity", "session_key", "created_timestamp")
+#     list_filter = ("created_timestamp",)
+#     search_fields = ("user__username", "product__name", "session_key")
+#     autocomplete_fields = ("user", "product")
+
+#     def get_queryset(self, request: HttpRequest):
+#         qs = super().get_queryset(request)
+#         return qs.select_related("user", "product")
 
 
 class SubscriptionInline(admin.StackedInline):
