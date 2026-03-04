@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="glass-panel hero">
+    <h1>4-уровневая техническая поддержка</h1>
+    <p>Выбирайте получателя: админ, нейросеть или корпоративная база знаний. История чатов и вложения сохраняются в вашем рабочем пространстве (UI-демо).</p>
+</section>
+
+<section class="support-layout">
+    <aside class="glass-panel chat-list">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="m-0" style="font-size:1.1rem;">История чатов</h2>
+            <button class="btn btn-sm btn-outline-danger" type="button">Новый чат</button>
+        </div>
+        <div class="chat-item active">Онбординг проекта · Сегодня</div>
+        <div class="chat-item">Проблема с деплоем · Вчера</div>
+        <div class="chat-item">Проверка нагрузки · 02.03.2026</div>
+        <hr>
+        <label class="form-label">Кому направить запрос</label>
+        <select class="form-select">
+            <option>Администратору</option>
+            <option>Нейросети</option>
+            <option>Нейросети (база знаний компании)</option>
+        </select>
+    </aside>
+
+    <div class="glass-panel chat-window">
+        <div class="message agent">Здравствуйте. Подскажите цель запроса: сопровождение, оптимизация или аварийная помощь?</div>
+        <div class="message user">Нужно подобрать конфиг для старта сервиса и проверить деградацию при пике.</div>
+        <div class="message agent">Рекомендую начать с тарифа Dev-Standard и включить автобэкапы + DDoS. Готов собрать чек-лист.</div>
+
+        <div class="upload-preview mt-3">Перетащите фото/скриншоты или выберите файл для вложения в чат</div>
+
+        <div class="row g-2 mt-2">
+            <div class="col-md-9">
+                <textarea class="form-control" rows="3" placeholder="Введите сообщение"></textarea>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button class="btn btn-danger" type="button">Отправить</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

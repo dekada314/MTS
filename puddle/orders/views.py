@@ -17,7 +17,7 @@ from notifications.tasks import send_order_confirmation
 class CreateOrderView(LoginRequiredMixin, FormView):
     template_name = 'orders/create_order.html'
     form_class = CreateOrderForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('user:profile')
 
     def get_initial(self):
         initial = super().get_initial()

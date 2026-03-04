@@ -1,148 +1,130 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% load cache %}
 {% load carts_tags %}
 
 {% block content %}
-<div class="row">
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Профиль с данными пользователя -->
-            <div class="col-md-5">
-                <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
-                    <h3 class="text-center mb-4">Профиль пользователя</h3>
-                    <form action="{% url "users:profile" %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12 mb-3 text-center">
-                                {% if user.image %}
-                                    <img src="{{ user.image.url }}"
-                                        alt="Аватар пользователя" class="img-fluid rounded-circle"
-                                        style="max-width: 150px;">
-                                {% else %}
-                                    <img src="{% static "deps/images/baseavatar.jpg" %}"
-                                        alt="Аватар пользователя" class="img-fluid rounded-circle"
-                                        style="max-width: 150px;">
-                                {% endif %}
-                                <input type="file" class="form-control mt-3" id="id_image"
-                                    name='image'
-                                    accept="image/*">
-                                    {% if form.image.errors %}
-                                    <div class="alert alert-danger alert-dismissible fade show">{{form.image.errors}}</div>
-                                    {% endif %}
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="id_first_name" class="form-label">Имя*</label>
-                                <input type="text" class="form-control" id="id_first_name"
-                                    name="first_name"
-                                    placeholder="Введите ваше имя"
-                                    value="{{ form.first_name.value }}"
-                                    required>
-                                    {% if form.first_name.errors %}
-                                    <div class="alert alert-danger alert-dismissible fade show">{{form.first_name.errors}}</div>
-                                    {% endif %}
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="id_last_name" class="form-label">Фамилия*</label>
-                                <input type="text" class="form-control" id="id_last_name"
-                                    name="last_name"
-                                    placeholder="Введите вашу фамилию"
-                                    value="{{ form.last_name.value }}"
-                                    required>
-                                    {% if form.last_name.errors %}
-                                    <div class="alert alert-danger alert-dismissible fade show">{{form.last_name.errors}}</div>
-                                    {% endif %}
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="id_username" class="form-label">Имя пользователя*</label>
-                                <input type="text" class="form-control" id="id_username"
-                                    name="username"
-                                    placeholder="Введите ваше имя пользователя"
-                                    value="{{ form.username.value }}"
-                                    required>
-                                    {% if form.username.errors %}
-                                    <div class="alert alert-danger alert-dismissible fade show">{{form.username.errors}}</div>
-                                    {% endif %}
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="id_email" class="form-label">Email*</label>
-                                <input type="email" class="form-control" id="id_email"
-                                    name="email"
-                                    placeholder="Введите ваш email *youremail@example.com"
-                                    value="{{ form.email.value }}"
-                                    required>
-                                    {% if form.email.errors %}
-                                    <div class="alert alert-danger alert-dismissible fade show">{{form.email.errors}}</div>
-                                    {% endif %}
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-dark">Сохранить</button>
-                    </form>
-                </div>
-            </div>
-            <!-- Корзина -->
-            {% user_carts request as carts %}
+<section class="glass-panel hero">
+    <h1>Личный кабинет</h1>
+    <p>
+        Тип аккаунта:
+        <strong>
+            {% if user.account_type == 'admin' %}
+                Администратор
+            {% elif user.account_type == 'student' %}
+                Студент
+            {% else %}
+                Пользователь
+            {% endif %}
+        </strong>
+    </p>
+</section>
 
-            <div class="col-md-7">
-                <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
-                    <h3 class="text-center mb-4">Корзина</h3>
-                    <div class="container" id="cart-items-container">
-                        <!-- Разметка корзины -->
-                        {% include "carts/includes/included_cart.html" %}
-                        <!-- Закончилась разметка корзины -->
-                    </div>
+{% if user.account_type == 'admin' %}
+<section class="glass-panel block">
+    <h2 class="block-title">Режим администратора</h2>
+    <p>Доступ к управлению системой и заявками.</p>
+    <a class="btn btn-danger" href="{% url 'admin:index' %}">Перейти в админ-панель</a>
+</section>
+{% elif user.account_type == 'student' %}
+<section class="glass-panel block">
+    <h2 class="block-title">Режим студента</h2>
+    <p>Студенческая подписка активна: доступны льготные сценарии тестирования и приоритетные рекомендации.</p>
+    <a class="btn btn-outline-danger" href="{% url 'user:student_verification' %}">Обновить данные студента</a>
+</section>
+{% else %}
+<section class="glass-panel block">
+    <h2 class="block-title">Режим пользователя</h2>
+    <p>Для специальных возможностей активируйте кнопку «Студенческая подписка» в шапке.</p>
+    <a class="btn btn-danger" href="{% url 'main:student_subscription' %}">Пройти верификацию студента</a>
+</section>
+{% endif %}
+
+<section class="profile-layout">
+    <div class="glass-panel block">
+        <h2 class="block-title">Профиль пользователя</h2>
+        <form action="{% url 'user:profile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-3 text-center">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="Аватар" class="img-fluid rounded-circle mb-2" style="max-width: 130px;">
+                    {% else %}
+                        <img src="{% static 'deps/images/baseavatar.jpg' %}" alt="Аватар" class="img-fluid rounded-circle mb-2" style="max-width: 130px;">
+                    {% endif %}
+                    <input type="file" class="form-control" name="image" accept="image/*">
                 </div>
-            </div>
-            <!-- Оформленные заказы -->
-            {% comment %} {% cache 60 user_orders user.id %} {% endcomment %}
-            <div class="col-md-12">
-                <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
-                    <h3 class="text-center mb-4">Мои заказы</h3>
-                    <!-- Разметка заказов -->
-                    <div class="container">
-                        <div class="accordion" id="accordionExample">
-                            {% for order in orders %}
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading{{ order.id }}">
-                                    <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
-                                        Заказ № {{ order.id }} - {{ order.created_timestamp }} | Статус: <strong class="mx-2">{{order.status}}</strong>
-                                    </button>
-                                </h2>
-                                <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <table class="table table-dark table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Товар</th>
-                                                    <th>Количество</th>
-                                                    <th>Цена</th>
-                                                    <th>Общая стоимость</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for item in order.orderitem_set.all %}
-                                                <tr>
-                                                    <td><a class="text-white" href="{% url 'goods:product' item.product.slug %}">{{ item.product.name }}</a></td>
-                                                    <td>{{ item.quantity }}</td>
-                                                    <td>{{ item.price }}</td>
-                                                    <td>{{ item.products_price }}</td>
-                                                    
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
+                <div class="col-md-9">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_first_name">Имя</label>
+                            <input class="form-control" type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_last_name">Фамилия</label>
+                            <input class="form-control" type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_username">Username</label>
+                            <input class="form-control" type="text" id="id_username" name="username" value="{{ form.username.value }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_email">Email</label>
+                            <input class="form-control" type="email" id="id_email" name="email" value="{{ form.email.value }}" required>
                         </div>
                     </div>
-
-                    <!-- Закончилась разметка заказов -->
                 </div>
             </div>
-            {% comment %} {% endcache %} {% endcomment %}
+            <button type="submit" class="btn btn-danger mt-3">Сохранить профиль</button>
+        </form>
+    </div>
+
+    {% user_carts request as carts %}
+    <div class="glass-panel block">
+        <h2 class="block-title">Корзина</h2>
+        <div id="cart-items-container">
+            {% include 'carts/includes/included_cart.html' %}
         </div>
     </div>
-</div>
-{% endblock  %}
+
+    <div class="glass-panel block">
+        <h2 class="block-title">Мои заказы</h2>
+        <div class="accordion" id="ordersAccordion">
+            {% for order in orders %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ order.id }}">
+                        <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}">
+                            Заказ №{{ order.id }} · {{ order.created_timestamp }} · Статус: {{ order.status }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" data-bs-parent="#ordersAccordion">
+                        <div class="accordion-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Товар</th>
+                                        <th>Кол-во</th>
+                                        <th>Цена</th>
+                                        <th>Сумма</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.orderitem_set.all %}
+                                        <tr>
+                                            <td><a href="{% url 'catalog:product' item.product.slug %}">{{ item.product.name }}</a></td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>{{ item.price }}</td>
+                                            <td>{{ item.products_price }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="mb-0">Пока нет заказов.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

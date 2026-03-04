@@ -24,4 +24,8 @@ app_name = 'main'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('about/', views.AboutView.as_view(), name='about'),
+    path('student-subscription/', views.StudentSubscriptionView.as_view(), name='student_subscription'),
+    path('support/', views.SupportView.as_view(), name='support'),
+    path('free-testing/', views.FreeTestingView.as_view(), name='free_testing'),
+    path('ready-solutions/', views.ReadySolutionsView.as_view(), name='ready_solutions'),
 ]

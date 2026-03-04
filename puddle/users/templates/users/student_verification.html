@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="glass-panel hero">
+    <h1>Подтверждение личности студента</h1>
+    <p>Заполните данные и прикрепите фото студенческого билета. После сохранения статус студента будет активирован в аккаунте.</p>
+</section>
+
+<section class="glass-panel form-panel">
+    <form method="post" enctype="multipart/form-data" action="{% url 'user:student_verification' %}">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="id_student_country">Страна студента</label>
+                <input class="form-control" type="text" id="id_student_country" name="student_country" value="{{ form.student_country.value|default:'' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="id_student_university">Название университета</label>
+                <input class="form-control" type="text" id="id_student_university" name="student_university" value="{{ form.student_university.value|default:'' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="id_student_email">Студенческая почта</label>
+                <input class="form-control" type="email" id="id_student_email" name="student_email" value="{{ form.student_email.value|default:'' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="id_student_id_card">Фото студенческого билета</label>
+                <input class="form-control" type="file" id="id_student_id_card" name="student_id_card" accept="image/*" {% if not user.student_id_card %}required{% endif %}>
+            </div>
+        </div>
+
+        {% if user.is_student_verified %}
+            <div class="alert alert-success mt-3 mb-0">Студенческий статус уже подтвержден.</div>
+        {% endif %}
+
+        <div class="mt-3 d-flex gap-2">
+            <button class="btn btn-danger" type="submit">Подтвердить студента</button>
+            <a class="btn btn-outline-secondary" href="{% url 'user:profile' %}">В личный кабинет</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
