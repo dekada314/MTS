@@ -1,24 +1,184 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
-{% endblock %}
-
 {% block modal_cart %}
-{% include "includes/cart_button.html" %}
-{% endblock  %}
+{% include 'includes/cart_button.html' %}
+{% endblock %}
 
 {% block content %}
-    <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
-{% endblock %}
+<section class="glass-panel hero">
+    <h1>MTS Cloud Orchestrator - Конфигуратор ресурсов</h1>
+    <p>
+        Выберите базовую платформу, подберите тариф и настройте сервер под вашу нагрузку.
+        Интерфейс пересчитывает стоимость в реальном времени и подсказывает оптимизацию параметров.
+    </p>
+</section>
 
-{% block footer %}
-<footer class="py-4 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023 - 2024</p>
+<section class="config-grid">
+    <div>
+        <article class="glass-panel block">
+            <h2 class="block-title">Блок 1. Фундамент</h2>
+            <div class="fundament-grid">
+                <div class="tier-card">
+                    <strong>CPU Tier: Eco</strong>
+                    <p>Надежная классика для простых задач</p>
+                </div>
+                <div class="tier-card">
+                    <strong>CPU Tier: Standard</strong>
+                    <p>Сбалансированная мощность</p>
+                </div>
+                <div class="tier-card">
+                    <strong>CPU Tier: Advanced</strong>
+                    <p>Максимальный отклик</p>
+                </div>
+                <div class="tier-card">
+                    <strong>Storage: HDD</strong>
+                    <p>Для архивов и бэкапов</p>
+                </div>
+                <div class="tier-card">
+                    <strong>Storage: SSD</strong>
+                    <p>Универсальный выбор</p>
+                </div>
+                <div class="tier-card">
+                    <strong>Storage: NVMe</strong>
+                    <p>Для высоконагруженных БД</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="glass-panel block">
+            <h2 class="block-title">Блок 2. Готовые конфигурации</h2>
+            <div class="plan-grid" id="plan-grid">
+                <button class="plan-card active" type="button" data-name="Micro" data-cpu="2" data-ram="4" data-disk="40" data-os="Ubuntu 22.04" data-price="12">
+                    <span class="badge-pill">Топ-выбор</span>
+                    <div class="plan-title">Micro</div>
+                    <p class="plan-spec">2 vCPU / 4 GB RAM / 40 GB SSD</p>
+                    <p class="plan-note">Идеально для 1С</p>
+                    <div class="plan-price">12.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Start DB" data-cpu="4" data-ram="8" data-disk="80" data-os="Debian 11" data-price="18">
+                    <span class="badge-pill">Для БД</span>
+                    <div class="plan-title">Start DB</div>
+                    <p class="plan-spec">4 vCPU / 8 GB RAM / 80 GB SSD</p>
+                    <p class="plan-note">Стабильно для CRM</p>
+                    <div class="plan-price">18.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Dev-Standard" data-cpu="6" data-ram="12" data-disk="120" data-os="Ubuntu 22.04" data-price="25">
+                    <span class="badge-pill">+40% быстрее базового</span>
+                    <div class="plan-title">Dev-Standard</div>
+                    <p class="plan-spec">6 vCPU / 12 GB RAM / 120 GB SSD</p>
+                    <p class="plan-note">Хватит для 5000 юзеров/день</p>
+                    <div class="plan-price">25.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="API-Boost" data-cpu="8" data-ram="16" data-disk="160" data-os="CentOS 7" data-price="32">
+                    <span class="badge-pill">API прод</span>
+                    <div class="plan-title">API-Boost</div>
+                    <p class="plan-spec">8 vCPU / 16 GB RAM / 160 GB SSD</p>
+                    <p class="plan-note">Под высокую конкуренцию запросов</p>
+                    <div class="plan-price">32.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Commerce" data-cpu="10" data-ram="24" data-disk="240" data-os="Ubuntu 22.04" data-price="41">
+                    <span class="badge-pill">Для eCommerce</span>
+                    <div class="plan-title">Commerce</div>
+                    <p class="plan-spec">10 vCPU / 24 GB RAM / 240 GB NVMe</p>
+                    <p class="plan-note">Сезонные пики без деградации</p>
+                    <div class="plan-price">41.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="1C-Core" data-cpu="12" data-ram="32" data-disk="320" data-os="Windows Server" data-price="53">
+                    <span class="badge-pill">1С эталон</span>
+                    <div class="plan-title">1C-Core</div>
+                    <p class="plan-spec">12 vCPU / 32 GB RAM / 320 GB NVMe</p>
+                    <p class="plan-note">Для интенсивных операций</p>
+                    <div class="plan-price">53.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Analytics" data-cpu="16" data-ram="48" data-disk="500" data-os="Debian 11" data-price="69">
+                    <span class="badge-pill">Big data</span>
+                    <div class="plan-title">Analytics</div>
+                    <p class="plan-spec">16 vCPU / 48 GB RAM / 500 GB NVMe</p>
+                    <p class="plan-note">Параллельная обработка данных</p>
+                    <div class="plan-price">69.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Scale X" data-cpu="24" data-ram="64" data-disk="700" data-os="Ubuntu 22.04" data-price="88">
+                    <span class="badge-pill">Нагрузка x2</span>
+                    <div class="plan-title">Scale X</div>
+                    <p class="plan-spec">24 vCPU / 64 GB RAM / 700 GB NVMe</p>
+                    <p class="plan-note">Для микросервисов и API</p>
+                    <div class="plan-price">88.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Enterprise" data-cpu="32" data-ram="96" data-disk="1024" data-os="Debian 11" data-price="119">
+                    <span class="badge-pill">Корпоративный</span>
+                    <div class="plan-title">Enterprise</div>
+                    <p class="plan-spec">32 vCPU / 96 GB RAM / 1 TB NVMe</p>
+                    <p class="plan-note">Для критичных сервисов</p>
+                    <div class="plan-price">119.00 BYN/мес</div>
+                </button>
+                <button class="plan-card" type="button" data-name="Max Cluster" data-cpu="48" data-ram="160" data-disk="1600" data-os="Ubuntu 22.04" data-price="169">
+                    <span class="badge-pill">MAX</span>
+                    <div class="plan-title">Max Cluster</div>
+                    <p class="plan-spec">48 vCPU / 160 GB RAM / 1.6 TB NVMe</p>
+                    <p class="plan-note">Промышленный SLA-контур</p>
+                    <div class="plan-price">169.00 BYN/мес</div>
+                </button>
+            </div>
+        </article>
     </div>
-</footer>
+
+    <div>
+        <article class="glass-panel block builder-wrap">
+            <h2 class="block-title">Блок 3. Индивидуальная настройка</h2>
+
+            <div class="slider-group" id="cpu-group">
+                <div class="slider-header"><span>Процессор (vCPU)</span><span id="cpu-value">2</span></div>
+                <input class="range-input" id="cpu-input" type="range" min="1" max="64" step="1" value="2">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header"><span>Память RAM (GB)</span><span id="ram-value">4</span></div>
+                <input class="range-input" id="ram-input" type="range" min="2" max="256" step="2" value="4">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header"><span>NVMe SSD (GB)</span><span id="disk-value">40</span></div>
+                <input class="range-input" id="disk-input" type="range" min="40" max="2048" step="20" value="40">
+            </div>
+
+            <div class="advisor" id="advisor-box">Smart Advisor: рекомендуем добавить ядер для такого объема памяти.</div>
+
+            <h3 class="mt-3" style="font-size:1rem;">Выбор ОС</h3>
+            <div class="os-grid" id="os-grid">
+                <button type="button" class="os-item active" data-os="Ubuntu 22.04">Ubuntu 22.04</button>
+                <button type="button" class="os-item" data-os="Debian 11">Debian 11</button>
+                <button type="button" class="os-item" data-os="CentOS 7">CentOS 7</button>
+                <button type="button" class="os-item" data-os="Windows Server">Windows Server + лицензия</button>
+            </div>
+
+            <h3 class="mt-3" style="font-size:1rem;">Дополнительные опции</h3>
+            <div class="toggle-list">
+                <label><input type="checkbox" id="opt-ip" checked> Публичный IP-адрес</label>
+                <label><input type="checkbox" id="opt-backup"> Автоматические бэкапы</label>
+                <label><input type="checkbox" id="opt-ddos"> Защита от DDoS-атак</label>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="glass-panel summary" id="summary-bar">
+    <div>
+        <div class="periods">
+            <button class="period-btn active" type="button" data-period="day">День</button>
+            <button class="period-btn" type="button" data-period="month">Месяц</button>
+            <button class="period-btn" type="button" data-period="year">Год -20%</button>
+        </div>
+        <div class="summary-desc" id="summary-desc">Вы выбрали: Ubuntu 22.04 + Micro</div>
+        <div class="summary-desc" id="summary-resources">2 vCPU / 4 GB RAM / 40 GB NVMe</div>
+    </div>
+    <div class="summary-price" id="summary-price">12.00 BYN/мес</div>
+    <div>
+        <button class="cta-main" type="button">Создать сервер</button>
+    </div>
+</section>
 {% endblock %}
 
-
+{% block scripts %}
+<script src="{% static 'deps/js/cloud_configurator.js' %}"></script>
+{% endblock %}

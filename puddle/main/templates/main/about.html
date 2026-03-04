@@ -1,29 +1,18 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block css %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
-{% endblock %}
-
-{% block modal_cart %}
-{% include "includes/cart_button.html" %}
-{% endblock  %}
+{% extends 'base.html' %}
 
 {% block content %}
-    <div class="mt-5 pt-5 bg-white custom-shadow rounded">
-        <div class="container p-4">
-        <h2 class="m-2"><strong>{{ content }}</strong></h2>
-        <p class="m-2">{{ text_on_page }}</p>
-        </div>
-    </div>
+<section class="glass-panel hero">
+    <h1>{{ content }}</h1>
+    <p>{{ text_on_page }}</p>
+</section>
+
+<section class="glass-panel block">
+    <h2 class="block-title">Что уже реализовано</h2>
+    <ul>
+        <li>Единая шапка с ключевыми бизнес-направлениями.</li>
+        <li>Интерактивный конфигуратор серверов с расчетом стоимости.</li>
+        <li>Страница студенческой подписки с сохранением статуса.</li>
+        <li>UI для техподдержки, бесплатного тестирования и готовых решений.</li>
+    </ul>
+</section>
 {% endblock %}
-
-{% block footer %}
-<footer class="py-4 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2023 - 2024</p>
-    </div>
-</footer>
-{% endblock %}
-
-

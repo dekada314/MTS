@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="glass-panel hero">
+    <h1>Бесплатное тестирование</h1>
+    <p>Запустите пробный сервер на 1 день и получите рекомендацию тарифа в реальном времени на основе выбранных ресурсов.</p>
+</section>
+
+<section class="testing-grid">
+    <article class="glass-panel preset-card" data-preset="minimum">
+        <h3>Минимум</h3>
+        <p>2 vCPU · 4 GB RAM · 40 GB SSD</p>
+        <p class="text-muted">Для лендингов и внутренней автоматизации.</p>
+    </article>
+    <article class="glass-panel preset-card" data-preset="medium">
+        <h3>Средний</h3>
+        <p>8 vCPU · 16 GB RAM · 200 GB NVMe</p>
+        <p class="text-muted">Для CRM/ERP и API среднего трафика.</p>
+    </article>
+    <article class="glass-panel preset-card" data-preset="maximum">
+        <h3>Максимум</h3>
+        <p>24 vCPU · 64 GB RAM · 800 GB NVMe</p>
+        <p class="text-muted">Для высоконагруженных проектов и аналитики.</p>
+    </article>
+</section>
+
+<section class="glass-panel block mt-3">
+    <h2 class="block-title">Создание тестового сервера</h2>
+    {% if not user.is_authenticated %}
+        <div class="alert alert-warning mb-3">Перед созданием тестового сервера требуется авторизация.</div>
+        <a class="btn btn-danger" href="{% url 'user:registration' %}?next={% url 'main:free_testing' %}">Зарегистрироваться</a>
+    {% else %}
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">vCPU</label>
+                <input id="trial-cpu" type="number" min="1" max="64" class="form-control" value="8">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RAM (GB)</label>
+                <input id="trial-ram" type="number" min="2" max="256" class="form-control" value="16">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Disk (GB)</label>
+                <input id="trial-disk" type="number" min="20" max="2048" class="form-control" value="200">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-danger w-100" id="create-trial" type="button">Создать сервер</button>
+            </div>
+        </div>
+
+        <div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
+            <span class="badge text-bg-light" id="trial-ip">IP: 10.10.45.19</span>
+            <button class="btn btn-outline-secondary btn-sm" id="copy-ip" type="button">Скопировать IP сервера</button>
+        </div>
+
+        <div class="alert alert-info mt-3 mb-0" id="trial-reco">Рекомендация: Medium Cloud (оптимально для тестового старта).</div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  const copyBtn = document.getElementById('copy-ip');
+  if (!copyBtn) return;
+
+  const ipBadge = document.getElementById('trial-ip');
+  const reco = document.getElementById('trial-reco');
+  const cpuInput = document.getElementById('trial-cpu');
+  const ramInput = document.getElementById('trial-ram');
+  const diskInput = document.getElementById('trial-disk');
+
+  function getRecommendation() {
+    const cpu = Number(cpuInput.value || 0);
+    const ram = Number(ramInput.value || 0);
+    const disk = Number(diskInput.value || 0);
+
+    if (cpu >= 20 || ram >= 64 || disk >= 700) {
+      return 'Рекомендация: Enterprise Max (высокая нагрузка, критичные сервисы).';
+    }
+    if (cpu >= 8 || ram >= 16 || disk >= 200) {
+      return 'Рекомендация: Medium Cloud (баланс стоимости и производительности).';
+    }
+    return 'Рекомендация: Basic Start (минимальный сценарий).';
+  }
+
+  document.querySelectorAll('[data-preset]').forEach((preset) => {
+    preset.addEventListener('click', () => {
+      const type = preset.dataset.preset;
+      if (type === 'minimum') {
+        cpuInput.value = 2; ramInput.value = 4; diskInput.value = 40;
+      } else if (type === 'medium') {
+        cpuInput.value = 8; ramInput.value = 16; diskInput.value = 200;
+      } else {
+        cpuInput.value = 24; ramInput.value = 64; diskInput.value = 800;
+      }
+      reco.textContent = getRecommendation();
+    });
+  });
+
+  [cpuInput, ramInput, diskInput].forEach((el) => {
+    el.addEventListener('input', () => {
+      reco.textContent = getRecommendation();
+    });
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const ipText = ipBadge.textContent.replace('IP: ', '').trim();
+    try {
+      await navigator.clipboard.writeText(ipText);
+      reco.textContent = getRecommendation();
+    } catch (e) {
+      reco.textContent = 'Не удалось скопировать IP автоматически. Скопируйте вручную.';
+    }
+  });
+})();
+</script>
+{% endblock %}

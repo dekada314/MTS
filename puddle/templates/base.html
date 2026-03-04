@@ -1,28 +1,18 @@
 {% load static %}
-{% load cache %}
-{% load goods_tags %}
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static "deps/css/bootstrap/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "deps/css/my_css.css" %}">
-    <!-- Стиль footer-a для главной страницы -->
-    {% block css %}
-
-    {% endblock %}
-    <!-- Favicons for different platforms -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static "deps/favicon/apple-touch-icon.png" %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static "deps/favicon/favicon-32x32.png" %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static "deps/favicon/favicon-16x16.png" %}">
-    <link rel="manifest" href="{% static "deps/favicon/site.webmanifest" %}">
+    <link rel="stylesheet" href="{% static 'deps/css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'deps/css/cloud_frontend.css' %}">
+    {% block css %}{% endblock %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'deps/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'deps/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'deps/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'deps/favicon/site.webmanifest' %}">
     <title>{{ title }}</title>
 </head>
-
 <body>
     <header>
         <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -80,55 +70,35 @@
                     </form>
                 </div>
             </div>
-        </nav>
+
+            <div class="cta-row">
+                <a class="cta-button" href="{% if user.is_authenticated %}{% url 'main:student_subscription' %}{% else %}{% url 'user:registration' %}?next={% url 'main:student_subscription' %}{% endif %}">
+                    Студенческая подписка
+                </a>
+                <a class="cta-button" href="{% url 'main:support' %}">4-уровневая техническая поддержка</a>
+                <a class="cta-button" href="{% url 'main:free_testing' %}">Бесплатное тестирование</a>
+                <a class="cta-button" href="{% url 'main:ready_solutions' %}">Готовые решения</a>
+                <div class="mini-cart">{% block modal_cart %}{% endblock %}</div>
+            </div>
+        </div>
     </header>
-    <section>
-        <div class="container">
-            <!-- Каталог и корзина с фиксированным расположением на странице -->
-            <div class="row mt-1 position-fixed z-3">
-                <!-- Каталог -->
-                <div class="dropdown mb-2">
-                    <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Каталог
-                        <img class="mx-1" src="{% static "deps/icons/grid-fill.svg" %}" alt="Catalog Icon" width="16"
-                            height="16">
-                    </button>
-                    <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
-                        {% cache 60 catalog_categories %}
-                        {% tag_categories as categories %}
-                        {% for category in categories %}
-                            <li><a class="dropdown-item text-white" href="{% url "catalog:index" category.slug %}">{{category.name}}</a></li>
-                        {% endfor %}
-                        {% endcache %}
 
-                    </ul>
-                </div>
-                <!-- Значек корзины, вызывает модальное окно -->
-                {% block modal_cart %}{% endblock  %}
-                <!-- Закончилась разметка модального окна -->
-            </div>
+    <main class="main-content container-fluid px-3 px-lg-4">
+        {% include 'includes/notifications.html' %}
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="site-footer">
+        <div class="container-fluid px-3 px-lg-4">
+            <p>MTS Cloud Orchestrator · Demo frontend on Django templates</p>
         </div>
-        <!-- Контент -->
-        <div class="container">
-            <div class="row mt-1">
-                <div class="col-lg-2">
-                    <!-- Пустой блок на Ваше усмотрение -->
-                </div>
-                <div class="col-lg-10">
-                    <!-- Контент на странице -->
-                    {% include "includes/notifications.html" %}
-                    {% block content %}{% endblock %}
-                </div>
-            </div>
-        </div>
-    </section>
+    </footer>
+    {% endblock %}
 
-    {% block footer %}{% endblock %}
-
-    <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
-    <script src="{% static "deps/js/jquery-ajax.js" %}"></script>
-    <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static 'deps/js/jquery/jquery-3.7.0.min.js' %}"></script>
+    <script src="{% static 'deps/js/jquery-ajax.js' %}"></script>
+    <script src="{% static 'deps/js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    {% block scripts %}{% endblock %}
 </body>
-
 </html>

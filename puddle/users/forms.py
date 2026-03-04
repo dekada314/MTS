@@ -113,6 +113,22 @@ class ProfileForm(UserChangeForm):
     email = forms.CharField()
 
 
+class StudentVerificationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "student_country",
+            "student_university",
+            "student_email",
+            "student_id_card",
+        )
+
+    student_country = forms.CharField(max_length=80)
+    student_university = forms.CharField(max_length=160)
+    student_email = forms.EmailField()
+    student_id_card = forms.ImageField(required=True)
+
+
 
     # image = forms.ImageField(
     #     widget=forms.FileInput(attrs={"class": "form-control mt-3"}), required=False

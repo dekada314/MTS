@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="glass-panel hero">
+    <h1>Готовые решения</h1>
+    <p>Выберите направление и изучайте подборки дизайн-концептов и функциональных идей в формате галереи.</p>
+</section>
+
+<section class="solutions-layout">
+    <aside class="glass-panel solution-filters">
+        <h2 style="font-size:1.05rem;" class="mb-3">Тип решения</h2>
+        <div class="d-grid gap-2">
+            <a class="btn {% if solution_type == '1c' %}btn-danger{% else %}btn-outline-secondary{% endif %}" href="{% url 'main:ready_solutions' %}?type=1c">1С</a>
+            <a class="btn {% if solution_type != '1c' %}btn-danger{% else %}btn-outline-secondary{% endif %}" href="{% url 'main:ready_solutions' %}?type=website">Сайт</a>
+        </div>
+        <hr>
+        {% if solution_type == '1c' %}
+            <p class="mb-0">Подборка концептов для автоматизации учёта, логистики, BI и документооборота.</p>
+        {% else %}
+            <p class="mb-0">Подборка сайтов для eCommerce, услуг, корпоративных порталов и образовательных платформ.</p>
+        {% endif %}
+    </aside>
+
+    <div class="photo-grid">
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/office chair.jpg' %}" alt="solution 1">
+            <p>{% if solution_type == '1c' %}Дашборд KPI и складские остатки{% else %}B2B-портал с каталогом и заявками{% endif %}</p>
+        </article>
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/corner sofa.jpg' %}" alt="solution 2">
+            <p>{% if solution_type == '1c' %}Распределенная бухгалтерия + интеграции{% else %}Промо-лендинг для digital-продукта{% endif %}</p>
+        </article>
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/double bed.jpg' %}" alt="solution 3">
+            <p>{% if solution_type == '1c' %}Управление производством и сменами{% else %}Магазин с omni-channel витриной{% endif %}</p>
+        </article>
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/plants.jpg' %}" alt="solution 4">
+            <p>{% if solution_type == '1c' %}BI-витрина по выручке и юнит-экономике{% else %}Сервис онлайн-бронирования и оплаты{% endif %}</p>
+        </article>
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/strange table.jpg' %}" alt="solution 5">
+            <p>{% if solution_type == '1c' %}Контроль SLA техподдержки и тикетов{% else %}Корпоративный сайт с HR-разделом{% endif %}</p>
+        </article>
+        <article class="photo-card">
+            <img src="{% static 'deps/images/goods/set of tea table and two chairs.jpg' %}" alt="solution 6">
+            <p>{% if solution_type == '1c' %}Автоматизация поставок и закупок{% else %}Образовательная платформа с личными кабинетами{% endif %}</p>
+        </article>
+    </div>
+</section>
+{% endblock %}

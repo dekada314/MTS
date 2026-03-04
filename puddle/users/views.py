@@ -12,7 +12,12 @@ from carts.models import Cart
 from common.mixins import CacheMixin
 from orders.models import Order, OrderItem
 import os
-from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
+from users.forms import (
+    ProfileForm,
+    StudentVerificationForm,
+    UserLoginForm,
+    UserRegistrationForm,
+)
 import secrets
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
@@ -51,7 +56,7 @@ class EmailVerificationView(View):
             user.save(update_fields=['email_verified', 'verification_token', 'token_created_at'])
             
             messages.success(request, 'Ваш email успешно подтверждён! Теперь вы можете оформлять заказы.')
-            return redirect('users:profile')
+            return redirect('user:profile')
             
         except Http404:
             messages.error(request, 'Неверная ссылка для подтверждения.')
@@ -96,7 +101,7 @@ class UserLoginView(LoginView):
 class UserRegistrationView(CreateView):
     template_name = 'users/registration.html'
     form_class = UserRegistrationForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('user:profile')
 
     def form_valid(self, form):
         session_key = self.request.session.session_key
@@ -128,7 +133,7 @@ class UserRegistrationView(CreateView):
         """Отправить письмо со ссылкой для подтверждения email."""
         try:
             verification_url = self.request.build_absolute_uri(
-                reverse('users:verify_email', kwargs={'token': user.verification_token})
+                reverse('user:verify_email', kwargs={'token': user.verification_token})
             )
             
             context = {
@@ -163,7 +168,7 @@ class UserRegistrationView(CreateView):
 class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
     template_name = 'users/profile.html'
     form_class = ProfileForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('user:profile')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -189,6 +194,27 @@ class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
             ).order_by("-id")
 
         context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
+        return context
+
+
+class StudentVerificationView(LoginRequiredMixin, UpdateView):
+    template_name = 'users/student_verification.html'
+    form_class = StudentVerificationForm
+    success_url = reverse_lazy('user:student_verification')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_student_verified = True
+        user.save()
+        messages.success(self.request, 'Статус студента подтвержден и сохранен.')
+        return HttpResponseRedirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Студенческая подписка'
         return context
 
 
